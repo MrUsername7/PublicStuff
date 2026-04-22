@@ -487,7 +487,7 @@ def menuButton():
     menu = 1
     mainmenu()
     scroll()
-  elif menu == 1 or menu == 1000:
+  elif menu == 999 or menu == 1000:
     menu = 1000
     code -= 5
     display.fill(0)
