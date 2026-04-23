@@ -14,7 +14,7 @@ try:
 except NameError:
     emulated = False
 
-sprite_laser = FrameBuffer(bytearray(b'\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'), 2, 8, RGB565)
+sprite_laser = FrameBuffer(bytearray(b'\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00'), 3, 6, RGB565)
 sprite_coin2 = FrameBuffer(bytearray(b'\x00\x00\x00\x00\x00\x00\xFF\x70\xFF\x70\xFF\x70\xFF\x70\xFF\x70\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x70\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\x00\x00\x00\x00\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\xD4\x06\xD4\x06\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFF\xFF\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFF\xFF\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFF\xFF\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\xD4\x06\xFD\xA0\xFD\xA0\xFF\x70\xFF\x70\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\x00\x00\x00\x00\xD4\x06\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xD4\x06\xD4\x06\xD4\x06\xD4\x06\xD4\x06\x00\x00\x00\x00\x00\x00'), 11, 11, RGB565)
 sprite_asteroid = FrameBuffer(bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xAB\x6E\x7A\x29\xAB\x6E\xAB\x6E\x50\x62\x50\x62\x7A\x29\xAB\x6E\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xAB\x6E\x7A\x29\xAB\x6E\xAB\x6E\x50\x62\x7A\x29\x7A\x29\xAB\x6E\x71\x25\xAB\x6E\xAB\x6E\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x7A\x29\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x50\x62\x7A\x29\xAB\x6E\xAB\x6E\x71\x25\xAB\x6E\xAB\x6E\xAB\x6E\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x71\x25\x71\x25\x71\x25\x71\x25\xAB\x6E\xAB\x6E\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\xAB\x6E'+
 b'\x7A\x29\xAB\x6E\x7A\x29\x71\x25\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\x71\x25\x58\xC4\x58\xC4\x50\x62\x71\x25\x00\x00\x00\x00\x00\x00\x00\x00\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\x7A\x29\x7A\x29\x58\xC4\x58\xC4\x50\x62\x71\x25\x00\x00\x00\x00\x00\x00\x00\x00\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x7A\x29\x7A\x29\x7A\x29\xAB\x6E\xAB\x6E\x7A\x29\x7A\x29\x7A\x29\x7A\x29\x71\x25\x58\xC4\x58\xC4\x58\xC4\x50\x62\x71\x25\x00\x00\x00\x00\x00\x00\x7A\x29\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x7A\x29\xAB\x6E\x7A\x29\x7A\x29\x7A\x29\x7A\x29\x7A\x29\x7A\x29\x7A\x29\x71\x25\x7A\x29\x71\x25\x7A\x29\x58\xC4\x58\xC4\x58\xC4\x58\xC4\x50\x62\x50\x62\x00\x00\x00\x00\x00\x00\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\xAB\x6E\x7A\x29\x7A\x29\x7A\x29\x71\x25'+
@@ -73,11 +73,15 @@ meteors = 0
 coinsUpg = 0
 value = 0
 temp = None
+shipPos = 1
 shipX = -4
 shipXchngBy = 52 #tu mijenjaj brzinu
 meteorAY = -40
+mAH = 3 #meteorAHealth
 meteorBY = -40
+mBH = 3
 meteorCY = -40
+mCH = 3
 meteorKill = 63
 meteorNoKill = 115
 meteorsShotInSession = 0
@@ -94,6 +98,7 @@ code = 5
 version = "1.0R4 - DEV"
 lives = 1
 livesTick = 1
+totalDistance = 0
 
 def shuffle(array):
     global lives, select, livesTick
@@ -163,8 +168,8 @@ def minigameSetup():
   if livesTick == 0 and lives == 0:
     minigame()
 
-def game():
-  global livesTick, lives, shipX, meteorAY, meteorBY, meteorCY, shipPos, money, meteorKill, meteorNoKill, fVA, fVB, fVC, meteorsShotInSession, multi, menu
+def drawgame():
+  global shipX, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, lives, livesTick, shipPos
   display.fill(0)
   display.blit(sprite_ship, int(shipX+3), int(80), 0)
   display.blit(sprite_asteroid, int(0), int(meteorAY), 0)
@@ -179,6 +184,11 @@ def game():
     display.text(str(multi), int(21 + len(str(round(money)))*8), int(0), Display.Color.White)
   display.blit(sprite_life, 0, 31, 0)
   display.text(str(lives)+","+str(livesTick), 11, 31, Display.Color.White)
+
+def game():
+  global totalDistance, livesTick, lives, shipX, meteorAY, meteorBY, meteorCY, shipPos, money, meteorKill, meteorNoKill, fVA, fVB, fVC, meteorsShotInSession, multi, menu
+  totalDistance += 1
+  drawgame()
   if meteorsShotInSession == 0:
     multi = 1
   elif meteorsShotInSession == 10:
@@ -205,12 +215,12 @@ def game():
     fVC = 3/5
     multi = 3/2
   elif meteorsShotInSession == 100:
-    if fVC != 4/6:
+    if fVC != 1:
       if tone: piezo.tone(1500, 150)
       if tone: piezo.tone(2000, 150)
-    fVC = 4/6
-    fVA = 3
-    fVB = 4
+    fVC = 1
+    fVA = 5
+    fVB = 7
     multi = 2
   if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
   display.commit()
@@ -335,13 +345,13 @@ def shopitem():
   display.blit(sprite_coin2, int(0), int(0), 0)
   display.text(str(money), int(13), int(0), Display.Color.White)
   if select == 0:
-    item = 'NEKORISTENO' #planiram da bude kraći cooldown "Shorter Cooldown"
-    item2 = 'UNUSED'
-    if laser == 2:
+    item = 'Stronger'
+    item2 = 'Laser'
+    if laser == 0:
       value = 100
     elif laser == 1:
       value = 150
-    elif laser == 0:
+    elif laser == 2:
       value = 9999
   elif select == 1:
     item = 'More'
@@ -421,8 +431,11 @@ def gamePrep():
 	menu = 0
 	shipX = -4
 	meteorAY = -40
+	mAH = 3
 	meteorBY = -40
+	mBH = 3
 	meteorCY = -40
+	mCH = 3
 	meteorsShotInSession = 0
 	fVA = 2
 	fVB = 3
@@ -437,24 +450,51 @@ def idk():
     return(1)
 
 def shootlaser():
-  global inCooldown, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, meteorsShotInSession, shipPos, tone
+  global inCooldown, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, meteorsShotInSession, shipPos, tone, mAH, mBH, mCH
   if tone: piezo.tone(1000,50)
   inCooldown = True
   if shipPos == 1:
+    i = 79
+    while not i <= meteorAY+20:
+      drawgame()
+      display.blit(sprite_laser, shipX+15, i, 0)
+      display.commit()
+      i -= 3
     if meteorAY >= -20:
-      meteorAY = -40
-      money += (coinsUpg + 1)*multi
-      meteorsShotInSession += 1
+      mAH -= laser+1
+      if mAH == 0:
+        mAH = 3
+        meteorAY = -40
+        money += (coinsUpg + 1)*multi
+        meteorsShotInSession += 1
   elif shipPos == 2:
+    i = 79
+    while not i <= meteorBY+20:
+      drawgame()
+      display.blit(sprite_laser, shipX+15, i, 0)
+      display.commit()
+      i -= 3
     if meteorBY >= -20:
-      meteorBY = -40
-      money += (coinsUpg + 1)*multi
-      meteorsShotInSession += 1
+      mBH -= laser+1
+      if mBH == 0:
+        mBH = 3
+        meteorBY = -40
+        money += (coinsUpg + 1)*multi
+        meteorsShotInSession += 1
   elif shipPos == 3:
+    i = 79
+    while not i <= meteorCY+20:
+      drawgame()
+      display.blit(sprite_laser, shipX+15, i, 0)
+      display.commit()
+      i -= 3
     if meteorCY >= -20:
-      meteorCY = -40
-      money += (coinsUpg + 1)*multi
-      meteorsShotInSession += 1
+      mCH -= laser+1
+      if mCH == 0:
+        mCH = 3
+        meteorCY = -40
+        money += (coinsUpg + 1)*multi
+        meteorsShotInSession += 1
 
 def downButton():
 	global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
@@ -546,6 +586,7 @@ def bButton():
   global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
   if (menu == 2 or menu >= 4) and not menu == 10:
     menu = 1
+    select = 0
     mainmenu()
     display.text(">",0,15,Display.Color.White)
     display.commit()
@@ -618,14 +659,14 @@ while True:
     elif meteorCY >= 130:
       meteorCY = -40
     game()
-    display.rect(int(0), int(21), int(cooldown+2), int(10), Display.Color.Gray, False)
-    if inCooldown:
-      i += 2
-      display.rect(int(1), int(22), int(i), int(8), Display.Color.White, True)
-      if i >= cooldown:
-        i = 0
-        inCooldown = False
-    display.commit()
+    #display.rect(int(0), int(21), int(cooldown+2), int(10), Display.Color.Gray, False)
+    #if inCooldown:
+    #  i += 2
+    #  display.rect(int(1), int(22), int(i), int(8), Display.Color.White, True)
+    #  if i >= cooldown:
+    #    i = 0
+    inCooldown = False
+    #display.commit()
   elif menu == 10:
       minigame()
   if flicker:
