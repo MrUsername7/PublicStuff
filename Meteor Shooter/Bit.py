@@ -25,9 +25,10 @@ FPS = 50
 INTERNAL_W, INTERNAL_H = 128, 128
 WINDOW_SCALE = 2  # 128 * 2 = 256
 
-_screen = pygame.Surface((INTERNAL_W, INTERNAL_H))
-_window = pygame.display.set_mode((INTERNAL_W * WINDOW_SCALE, INTERNAL_H * WINDOW_SCALE))
-pygame.display.set_caption("Bit Emulator")
+if not __name__ == "__main__":
+    _screen = pygame.Surface((INTERNAL_W, INTERNAL_H))
+    _window = pygame.display.set_mode((INTERNAL_W * WINDOW_SCALE, INTERNAL_H * WINDOW_SCALE))
+    pygame.display.set_caption("Bit Emulator")
 
 _clock = pygame.time.Clock()
 _start_time = time.time()
@@ -450,6 +451,9 @@ class Backlight:
 backlight = Backlight()
 if not backlight.enabled:
     _screen.fill((0, 0, 0))
+
+def emulatedCheck():
+    return True
 
 # =========================================================
 # MICRO-PYTHON MODULE SHADOWING
