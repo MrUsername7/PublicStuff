@@ -58,6 +58,73 @@ b'\xD9\xBA\xF1\x7D\xE0\xBB\xB8\x16\x00\x00\x00\x00\x00\x00\x00\x00\xB8\x16\xF8\x
 b'\x78\x0F\xFD\x1A\xF8\x00\x78\x0F\xB8\x16\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x78\x0F\xB8\x16\x78\x0F\xF8\x00\xFD\x1A\x78\x0F\xB8\x16\x78\x0F\xFD\x1A\xF8\x00\x78\x0F\xB8\x16\x78\x0F\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x02\x15\x78\x0F\xB8\x16\x78\x0F\xF8\x00\x78\x0F\xB8\x16\x78\x0F\xF8\x00\x78\x0F\xB8\x16\x78\x0F\x78\x0F\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x02\x15\x02\x15\x78\x0F\x78\x0F\x78\x0F\x78\x0F\x78\x0F\x78\x0F\x78\x0F\xB8\x16\x02\x15\x90\x11\x60\x0B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x02\x15\x00\x00\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x02\x15\x00\x00\x00\x00\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x02\x15\x02\x15\x00\x00\x00\x00\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15'+
 b'\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x02\x15\x02\x15\x02\x15\x02\x15\x00\x00\x00\x00\x02\x15\x00\x00\x02\x15\x02\x15\x02\x15\x02\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x02\x15\x02\x15\x00\x00\x02\x15\x00\x00\x02\x15\x00\x00\x00\x00\x02\x15\x02\x15\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x02\x15\x00\x00\x00\x00\x02\x15\x02\x15\x00\x00\x02\x15\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x00\x00\x02\x15\x02\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x15\x00\x00\x00\x00\x00\x00\x02\x15\x02\x15\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'), 22, 29, RGB565)
 
+lang_en = [
+"for Bit",
+"Textures:",
+"Programming:",
+"EMULATED",
+"(B) Back",
+"Play",
+"Shop",
+"Settings",
+"About",
+"Sound: ",
+"Confirm",
+"Change",
+"selection",
+'Stronger',
+'Laser',
+'More',
+'Meteors',
+'Coins',
+"< Money and",
+"progress",
+"multiplier",
+"Help page ",
+"(A) Continue...",
+"(B) Skip",
+'< "More Coins"',
+"upgrade",
+"", #"< Cooldown",
+"A: Shoot",
+"Menu: Exit",
+"< and >: Move",
+"(A) Let's play!"
+    ]
+lang_hr = [
+"za Bit",
+"Teksture:",
+"Programiranje:",
+"EMULIRANO",
+"(B) Nazad",
+"Igraj",
+"Trgovina",
+"Postavke",
+"O",
+"Zvuk: ",
+"Potvrdi",
+"Promjeni",
+"odabir",
+'Jaci',
+'Laser',
+'Vise',
+'Meteora',
+'Novaca',
+"< Novci i",
+"multiplikator",
+"napretka",
+"Pomocna str. ",
+"(A) Nastavak...",
+"(B) Preskoci",
+'< "Vise Novaca"',
+"nadogradnja",
+"",
+"A: Pucaj",
+"Menu: Izlaz",
+"< and >: Pomici",
+"(A) Ajmo igrati!"
+    ]
+
 startValue = None
 targetValue = None
 step = None
@@ -99,6 +166,7 @@ version = "1.0R4 - DEV"
 lives = 1
 livesTick = 1
 totalDistance = 0
+lang = lang_en
 
 def shuffle(array):
     global lives, select, livesTick
@@ -116,37 +184,37 @@ def about():
   select = 0
   display.fill(Display.Color.Navy)
   display.text("Meteor Shooter", int(8), int(0), Display.Color.White)
-  display.text("for Bit", int(36), int(8), Display.Color.White)
+  display.text(lang[0], int(36), int(8), Display.Color.White)
   display.text(version, int(0), int(20), Display.Color.White)
-  display.text("Textures:", int(0), int(28), Display.Color.White)
+  display.text(lang[1], int(0), int(28), Display.Color.White)
   display.text("Leon", int(8), int(36), Display.Color.White)
   display.text("Adrian", int(8), int(44), Display.Color.White)
   display.text("Andrija", int(8), int(52), Display.Color.White)
-  display.text("Programming:", int(0), int(68), Display.Color.White)
+  display.text(lang[2], int(0), int(68), Display.Color.White)
   display.text("Leon", int(8), int(76), Display.Color.White)
-  if emulated: display.text("EMULATED", int(0), int(112), Display.Color.White)
-  display.text("(B) Back", int(32), int(120), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(112), Display.Color.White)
+  display.text(lang[4], int(32), int(120), Display.Color.White)
   display.commit()
 
 def mainmenu():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
   display.fill(Display.Color.Navy)
   display.text("METEOR SHOOT>R", int(8), int(0), Display.Color.White)
-  display.text("Play", int(48), int(15), Display.Color.White)
-  display.text("Shop", int(48), int(30), Display.Color.White)
-  display.text("Settings", int(32), int(45), Display.Color.White)
-  display.text("About", int(44), int(60), Display.Color.White)
-  if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+  display.text(lang[5], int(64-int(len(lang[5]))*4), int(15), Display.Color.White)
+  display.text(lang[6], int(64-int(len(lang[6]))*4), int(30), Display.Color.White)
+  display.text(lang[7], int(64-int(len(lang[7]))*4), int(45), Display.Color.White)
+  display.text(lang[8], int(64-int(len(lang[8]))*4), int(60), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
 
 def mainmenu2():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value, tone, temp
   menu = 5
   select = 0
   display.fill(Display.Color.Navy)
-  display.text(str("Settings"), int(8), int(0), Display.Color.White)
-  temp = str("Sound: "+str(tone))
+  display.text(lang[7], int(8), int(0), Display.Color.White)
+  temp = str(lang[9]+str(tone))
   display.text(str(temp),int(64-int(len(temp))*4),int(15),Display.Color.White)
-  if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
 
 def idk2():
   if menu == 1:
@@ -222,7 +290,7 @@ def game():
     fVA = 5
     fVB = 7
     multi = 2
-  if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
   display.commit()
   if livesTick == 0:
     if shipPos == 1 and meteorNoKill > meteorAY > meteorKill:
@@ -265,10 +333,10 @@ def minigame(aPressed=False): #nedovršeno
     display.blit(sprite_cup, int(43), int(86), 0)
     display.blit(sprite_cup, int(86), int(86), 0)
     item = "A:"
-    item2 = "Confirm"
+    item2 = lang[10]
     item3 = "B:"
-    item4 = "Change"
-    item5 = "selection"
+    item4 = lang[11]
+    item5 = lang[12]
     display.text(item, 64-len(item)*4, 48, Display.Color.White)
     display.text(item2, 64-len(item2)*4, 56, Display.Color.White)
     display.text(item3, 64-len(item3)*4, 64, Display.Color.White)
@@ -276,7 +344,7 @@ def minigame(aPressed=False): #nedovršeno
     display.text(item5, 64-len(item5)*4, 80, Display.Color.White)
     #display.text(str(select), 60, 60, Display.Color.White)
     display.rect(posBoxX(), posBoxY(), int(40), int(40), Display.Color.White, False)
-    if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+    if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
     display.commit()
   else:
     display.fill(0)
@@ -288,7 +356,7 @@ def minigame(aPressed=False): #nedovršeno
       display.blit(sprite_life, 0, 0, 0)
     elif item == 2:
       display.blit(sprite_life2times, 0, 0, 0)
-    if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+    if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
     display.commit()
     time.sleep(1)
     lives += item
@@ -307,7 +375,7 @@ def buymenu():
   display.rect(int(32), int(32), int(64), int(64), 0, True)
   display.rect(int(0), int(40), int(16), int(48), 0, True)
   display.rect(int(112), int(40), int(16), int(48), 0, True)
-  if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
   shopitem()
 
 def buyscrollr(startValue, targetValue, step):
@@ -323,7 +391,7 @@ def buyscrollr(startValue, targetValue, step):
     display.rect(int(112 + i), int(40), int(48), int(48), 0, True)
     display.rect(int(-72 + i), int(40), int(16), int(48), 0, True)
     display.rect(int(184 + i), int(40), int(48), int(48), 0, True)
-    if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+    if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
     display.commit()
 
 def buymenu2(startValue, targetValue, step):
@@ -337,7 +405,7 @@ def buymenu2(startValue, targetValue, step):
     display.rect(int(40 - i / 2), int(40 - i / 2), int(48 + i), int(48 + i), 0, True)
     display.rect(int(0), int(40), int(16), int(48), 0, True)
     display.rect(int(112), int(40), int(16), int(48), 0, True)
-    if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+    if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
     display.commit()
 
 def shopitem():
@@ -345,8 +413,8 @@ def shopitem():
   display.blit(sprite_coin2, int(0), int(0), 0)
   display.text(str(money), int(13), int(0), Display.Color.White)
   if select == 0:
-    item = 'Stronger'
-    item2 = 'Laser'
+    item = lang[13]
+    item2 = lang[14]
     if laser == 0:
       value = 100
     elif laser == 1:
@@ -354,8 +422,8 @@ def shopitem():
     elif laser == 2:
       value = 9999
   elif select == 1:
-    item = 'More'
-    item2 = 'Meteors'
+    item = lang[15]
+    item2 = lang[16]
     if meteors == 0:
       value = 50
     elif meteors == 1:
@@ -363,8 +431,8 @@ def shopitem():
     elif meteors == 2:
       value = 9999
   elif select == 2:
-    item = 'More'
-    item2 = 'Coins'
+    item = lang[15]
+    item2 = lang[17]
     if coinsUpg == 0:
       value = 25
     elif coinsUpg == 1:
@@ -386,7 +454,7 @@ def shopitem():
   else:
     temp = value
   display.text(str(temp), int(64 - len(str(temp)) * 4), int(96), Display.Color.White)
-  if emulated: display.text("EMULATED", int(0), int(120), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
   display.commit()
 
 def helps():
@@ -400,29 +468,29 @@ def helps():
   display.text(str(coinsUpg+1), int(0), int(12), Display.Color.White)
   display.rect(int(0), int(21), int(cooldown+2), int(10), Display.Color.Gray, False)
   if select == 0:
-    display.text(str("< Money and"), int(40), int(0), Display.Color.White)
-    display.text(str("progress"), int(40), int(8), Display.Color.White)
-    display.text(str("multiplier"), int(40), int(16), Display.Color.White)
-    item = "Help page (1/4)"
-    item2 = "(A) Continue..."
-    item3 = "(B) Skip"
+    display.text(lang[18], int(40), int(0), Display.Color.White)
+    display.text(lang[19], int(40), int(8), Display.Color.White)
+    display.text(lang[20], int(40), int(16), Display.Color.White)
+    item = lang[21]+"1/3"
+    item2 = lang[22]
+    item3 = lang[23]
   elif select == 1:
-    display.text(str('< "More Coins"'), int(10), int(12), Display.Color.White)
-    display.text(str("upgrade"), int(26), int(18), Display.Color.White)
-    item = "Help page (2/4)"
-  elif select == 2:
-    display.text(str("< Cooldown"), int(26), int(22), Display.Color.White)
-    item = "Help page (3/4)"
+    display.text(lang[24], int(10), int(12), Display.Color.White)
+    display.text(lang[25], int(26), int(18), Display.Color.White)
+    item = lang[21]+"2/3"
   elif select == 3:
-    display.text(str("A: Shoot"), int(0), int(32), Display.Color.White)
-    display.text(str("Menu: Exit"), int(0), int(40), Display.Color.White)
-    display.text(str("< and >: Move"), int(0), int(48), Display.Color.White)
-    item = "Help page (4/4)"
-    item2 = "(A) Let's play!"
+    display.text(lang[26], int(26), int(22), Display.Color.White)
+    item = lang[21]+"(3/4)"
+  elif select == 2:
+    display.text(lang[27], int(0), int(32), Display.Color.White)
+    display.text(lang[28], int(0), int(40), Display.Color.White)
+    display.text(lang[29], int(0), int(48), Display.Color.White)
+    item = lang[21]+"3/3"
+    item2 = lang[30]
   display.text(str(item), int(64 - len(item) * 4), int(104), Display.Color.White)
   display.text(str(item2), int(64 - len(item2) * 4), int(112), Display.Color.White)
   display.text(str(item3), int(64 - len(item3) * 4), int(120), Display.Color.White)
-  if emulated: display.text("EMULATED", int(0), int(96), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(96), Display.Color.White)
   display.commit()
 
 def gamePrep():
@@ -553,15 +621,13 @@ def aButton():
 	      display.text(str(money), int(13), int(0), Display.Color.White)
 	      display.commit()
 	elif menu == 3:
-	  if select == 3:
+	  if select == 2:
 	    menu = 0
 	    gamePrep()
 	  else:
 	    select += 1
 	    helps()
 	elif menu == 5:
-	  print(str("select: ")+str(select))
-	  print(str(tone))
 	  if select == 0:
 	    tone = not tone
 	    mainmenu2()
