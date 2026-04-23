@@ -310,11 +310,18 @@ class FrameBuffer:
                 c = buffer[i] << 8 | buffer[i + 1]
                 i += 2
 
+                # =========================================
+                # TRANSPARENT PIXEL (REAL HW BEHAVIOR)
+                # =========================================
+                if c == 0x0000:
+                    # leave pixel transparent (do nothing)
+                    continue
+
                 r = ((c >> 11) & 0x1F) << 3
                 g = ((c >> 5) & 0x3F) << 2
                 b = (c & 0x1F) << 3
 
-                self.surface.set_at((x, y), (r, g, b))
+                self.surface.set_at((x, y), (r, g, b, 255))
 
 # =========================================================
 # BUTTONS
