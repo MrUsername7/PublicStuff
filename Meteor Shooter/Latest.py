@@ -168,7 +168,7 @@ flicker = False
 cupsList = [0,0,0,0,1,1,1,2] #  0 su vanzemaljci, 1 su +1 život, a 2 su +2 života
 tone = True
 code = 5
-version = "1.0R4 - DEV"
+version = "0.4.7 - PRE"
 lives = 1
 livesTick = 1
 totalDistance = 0
@@ -223,7 +223,7 @@ def mainmenu2():
   display.text(lang[7], int(8), int(0), Display.Color.White)
   temp = lang[9]+str(tone)
   display.text(temp,64-int(len(temp))*4,15,Display.Color.White)
-  display.text(lang[33],64-len(lang[33])*4,15,Display.Color.White)
+  display.text(lang[33],64-len(lang[33])*4,30,Display.Color.White)
   if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
 
 def idk2():
@@ -677,7 +677,19 @@ def bButton():
     mainmenu()
     display.text(">",0,30,Display.Color.White)
     display.commit()
-  if menu >= 4 and not menu == 10:
+  elif menu == 4:
+    menu = 1
+    select = 3
+    mainmenu()
+    display.text(">",0,60,Display.Color.White)
+    display.commit()
+  elif menu == 5:
+    menu = 1
+    select = 2
+    mainmenu()
+    display.text(">",0,45,Display.Color.White)
+    display.commit()
+  elif menu >= 6 and not menu == 10:
     menu = 1
     select = 0
     mainmenu()
