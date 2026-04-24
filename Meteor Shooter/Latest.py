@@ -242,7 +242,6 @@ def scroll():
 def minigameSetup():
   global livesTick, lives
   shuffle(cupsList)
-  print(cupsList)
   if livesTick == 0 and lives == 0:
     minigame()
 
@@ -598,8 +597,8 @@ def upButton():
 buttons.on_press(Buttons.Up, upButton)
 
 def aButton():
-	global tone, code, step, select, i, x, menu, money, item, laser, item2, meteors, coinsUpg, value, shipX, shipPos, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, cooldown, inCooldown, multi
-	if menu == 0 and not inCooldown:
+	global fastl, tone, code, step, select, i, x, menu, money, item, laser, item2, meteors, coinsUpg, value, shipX, shipPos, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, cooldown, inCooldown, multi
+	if menu == 0:
 	  shootlaser()
 	elif menu == 1:
 	  if select == 0:
@@ -620,6 +619,7 @@ def aButton():
 	    about()
 	elif menu == 2:
 	  if value != 9999 and money >= value:
+	    if tone: piezo.tone(200, 50)
 	    money -= value
 	    if select == 0:
 	      laser += 1
@@ -627,6 +627,8 @@ def aButton():
 	      meteors += 1
 	    elif select == 2:
 	      coinsUpg += 1
+	    elif select == 3:
+	      fastl += 1
 	    buymenu()
 	    shopitem()
 	  else:
@@ -634,7 +636,7 @@ def aButton():
 	    if temp:
 	      display.text(str(money), int(13), int(0), Display.Color.Red)
 	      display.commit()
-	    if tone: piezo.tone(200, 50)
+	    if tone: piezo.tone(125, 50)
 	    time.sleep(0.25)
 	    if temp:
 	      display.text(str(money), int(13), int(0), Display.Color.White)
@@ -669,7 +671,13 @@ buttons.on_press(Buttons.C, menuButton)
 
 def bButton():
   global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-  if (menu == 2 or menu >= 4) and not menu == 10:
+  if menu == 2:
+    menu = 1
+    select = 1
+    mainmenu()
+    display.text(">",0,30,Display.Color.White)
+    display.commit()
+  if menu >= 4 and not menu == 10:
     menu = 1
     select = 0
     mainmenu()
@@ -750,7 +758,7 @@ while True:
     #  display.rect(int(1), int(22), int(i), int(8), Display.Color.White, True)
     #  if i >= cooldown:
     #    i = 0
-    inCooldown = False
+    #    inCooldown = False
     #display.commit()
   elif menu == 10:
       minigame()
