@@ -70,10 +70,10 @@ def cb_Y1UQ5rz6Q():
 	  display.commit()
 	  time.sleep(0.5)
 	elif page == 3:
-	  for i in range(0,32):
+	  temp = 32
+	  for i in range(0,65568,temp):
 	    display.fill(0)
 	    display.text(str(i), 0, 0, i)
-	    print(i)
 	    display.commit()
 	time.sleep(0.5)
 	#help()
@@ -147,5 +147,6 @@ while True:
 	elif page == 3:
 	  display.text(str('ms: ' + str(time.ticks_ms())), int(0), int(16), Display.Color.White)
 	  display.text(str('us: ' + str(time.ticks_us())), int(0), int(24), Display.Color.White)
-	  display.text(str('C: Int Text Colr'), int(0), int(32), Display.Color.White)
+	  display.text(str('name: '+str(__name__)), int(0), int(32), Display.Color.White)
+	  display.text(str('C: Int Text Colr'), int(0), int(40), Display.Color.White)
 	display.commit()

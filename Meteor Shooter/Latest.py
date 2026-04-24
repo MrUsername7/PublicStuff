@@ -89,7 +89,10 @@ lang_en = [
 "A: Shoot",
 "Menu: Exit",
 "< and >: Move",
-"(A) Let's play!"
+"(A) Let's play!",
+"Faster",
+"Translations:",
+"Language"
     ]
 lang_hr = [
 "za Bit",
@@ -122,7 +125,10 @@ lang_hr = [
 "A: Pucaj",
 "Menu: Izlaz",
 "< and >: Pomici",
-"(A) Ajmo igrati!"
+"(A) Ajmo igrati!",
+"Brži",
+"Prijevodi:",
+"Jezik"
     ]
 
 startValue = None
@@ -167,6 +173,7 @@ lives = 1
 livesTick = 1
 totalDistance = 0
 lang = lang_en
+fastl = 0
 
 def shuffle(array):
     global lives, select, livesTick
@@ -192,6 +199,8 @@ def about():
   display.text("Andrija", int(8), int(52), Display.Color.White)
   display.text(lang[2], int(0), int(68), Display.Color.White)
   display.text("Leon", int(8), int(76), Display.Color.White)
+  display.text(lang[32], int(0), int(92), Display.Color.White)
+  display.text("Leon", int(8), int(100), Display.Color.White)
   if emulated: display.text(lang[3], int(0), int(112), Display.Color.White)
   display.text(lang[4], int(32), int(120), Display.Color.White)
   display.commit()
@@ -212,8 +221,9 @@ def mainmenu2():
   select = 0
   display.fill(Display.Color.Navy)
   display.text(lang[7], int(8), int(0), Display.Color.White)
-  temp = str(lang[9]+str(tone))
-  display.text(str(temp),int(64-int(len(temp))*4),int(15),Display.Color.White)
+  temp = lang[9]+str(tone)
+  display.text(temp,64-int(len(temp))*4,15,Display.Color.White)
+  display.text(lang[33],64-len(lang[33])*4,15,Display.Color.White)
   if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
 
 def idk2():
@@ -409,7 +419,7 @@ def buymenu2(startValue, targetValue, step):
     display.commit()
 
 def shopitem():
-  global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value, temp
+  global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value, temp, fastl
   display.blit(sprite_coin2, int(0), int(0), 0)
   display.text(str(money), int(13), int(0), Display.Color.White)
   if select == 0:
@@ -445,6 +455,15 @@ def shopitem():
       value = 150
     elif coinsUpg == 5:
       value = 9999
+  elif select == 3:
+      item = lang[31]
+      item2 = lang[14]
+      if fastl == 0:
+        value = 250
+      elif fastl == 1:
+        value = 300
+      elif fastl == 2:
+        value = 9999
   else:
     item = 'ERR01'
   display.text(str(item), int(64 - len(item) * 4), int(56), Display.Color.White)
@@ -518,7 +537,7 @@ def idk():
     return(1)
 
 def shootlaser():
-  global inCooldown, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, meteorsShotInSession, shipPos, tone, mAH, mBH, mCH
+  global fastl, inCooldown, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, meteorsShotInSession, shipPos, tone, mAH, mBH, mCH
   if tone: piezo.tone(1000,50)
   inCooldown = True
   if shipPos == 1:
@@ -527,7 +546,7 @@ def shootlaser():
       drawgame()
       display.blit(sprite_laser, shipX+15, i, 0)
       display.commit()
-      i -= 3
+      i -= fastl+3
     if meteorAY >= -20:
       mAH -= laser+1
       if mAH == 0:
@@ -541,7 +560,7 @@ def shootlaser():
       drawgame()
       display.blit(sprite_laser, shipX+15, i, 0)
       display.commit()
-      i -= 3
+      i -= fastl+3
     if meteorBY >= -20:
       mBH -= laser+1
       if mBH == 0:
@@ -555,7 +574,7 @@ def shootlaser():
       drawgame()
       display.blit(sprite_laser, shipX+15, i, 0)
       display.commit()
-      i -= 3
+      i -= fastl+3
     if meteorCY >= -20:
       mCH -= laser+1
       if mCH == 0:
@@ -677,7 +696,7 @@ def rightButton():
 	  buymenu2(16, 0, 2)
 	  buyscrollr(0, -72, 3)
 	  buymenu2(0, 16, -2)
-	  select = (select+1)%3
+	  select = (select+1)%4
 	  buymenu()
 	  shopitem()
 buttons.on_press(Buttons.Right, rightButton)
@@ -694,7 +713,7 @@ def leftButton():
 	  buymenu2(16, 0, 2)
 	  buyscrollr(0, 72, -3)
 	  buymenu2(0, 16, -2)
-	  select = (select-1)%3
+	  select = (select-1)%4
 	  buymenu()
 	  shopitem()
 buttons.on_press(Buttons.Left, leftButton)

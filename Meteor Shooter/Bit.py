@@ -57,10 +57,19 @@ def _resolve_color(color):
     if color is None:
         raise TypeError("can't convert NoneType to int")
 
-    # hardware palette mode
     if isinstance(color, int):
-        v = color & 31
-        return (0, 0, int(v * 255 / 31))
+        c = color & 0xFFFF  # clamp to 16-bit
+
+        r = (c >> 11) & 0x1F
+        g = (c >> 5)  & 0x3F
+        b = c & 0x1F
+
+        # scale to 0–255
+        r = (r << 3) | (r >> 2)
+        g = (g << 2) | (g >> 4)
+        b = (b << 3) | (b >> 2)
+
+        return (r, g, b)
 
     return color
 
@@ -121,16 +130,6 @@ class DisplayWrapper:
 
     def text(self, string, x, y, color):
         cx = x
-
-        def _resolve_color(color):
-            if color is None:
-                raise TypeError("can't convert NoneType to int")
-
-            if isinstance(color, int):
-                v = color & 31
-                return v  # <-- IMPORTANT: return INT, not RGB
-
-            return color
 
         color = _resolve_color(color)
 
