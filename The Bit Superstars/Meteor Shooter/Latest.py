@@ -429,7 +429,7 @@ def minigame(aPressed=False): #nedovršeno
     elif item == 1:
       display.blit(sprite_life, 59, 50, 0)
     elif item == 2:
-      display.blit(sprite_life2times, 49, 0, 0)
+      display.blit(sprite_life2times, 49, 50, 0)
     if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
     display.commit()
     time.sleep(1)
