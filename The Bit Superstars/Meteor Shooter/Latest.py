@@ -209,23 +209,33 @@ flicker = False
 cupsList = [0,0,0,0,1,1,1,2] #  0 su vanzemaljci, 1 su +1 život, a 2 su +2 života
 tone = True
 code = 5
-version = "0.4.8 - PRE"
+version = "0.4.9 - PRE"
 lives = 1
 livesTick = 1
 totalDistance = 0
 lang = lang_en[:]
 fastl = 0
-selectMeteor = [False, True, False]
+selectMeteor = [0, 1, 0]
 
 def shuffle(array):
     global lives, select, livesTick
-    select = 0
-    if lives > 1:
-        livesTick = 125
-    lives -= 1
+    if array == cupsList:
+        select = 0
+        if lives > 1:
+            livesTick = 125
+        lives -= 1
     for i in range(len(array) - 1, 0, -1):
         j = randrange(i + 1)
         array[i], array[j] = array[j], array[i]
+
+def shuffleMeteors():
+    global selectMeteor, meteorAY, meteorBY, meteorCY
+    while True:
+        shuffle(selectMeteor)
+        if ((meteorAY <= -25 or selectMeteor[0]) and
+            (meteorBY <= -25 or selectMeteor[1]) and
+            (meteorCY <= -25 or selectMeteor[2])):
+            break
 
 def about():
   global menu, select
@@ -552,7 +562,7 @@ def helps():
   display.commit()
 
 def gamePrep():
-	global select, menu, shipX, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, lives
+	global select, menu, shipX, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, lives, meteors, selectMeteor
 	select = 0
 	menu = 0
 	shipX = -4
@@ -567,6 +577,13 @@ def gamePrep():
 	fVB = 3
 	fVC = 3
 	lives = 1
+	if meteors == 0:
+	    selectMeteor = [0, 1, 0]
+	elif meteors == 1:
+	    selectMeteor = [1, 0, 1]
+	elif meteors == 2:
+	    selectMeteor = [1, 1, 1]
+	shuffleMeteors()
 	game()
 
 def idk():
@@ -595,6 +612,7 @@ def shootlaser():
         meteorAY = -40
         money += (coinsUpg + 1)*multi
         meteorsShotInSession += 1
+        shuffleMeteors()
   elif shipPos == 2:
     i = 79
     while not i <= meteorBY+20:
@@ -609,6 +627,7 @@ def shootlaser():
         meteorBY = -40
         money += (coinsUpg + 1)*multi
         meteorsShotInSession += 1
+        shuffleMeteors()
   elif shipPos == 3:
     i = 79
     while not i <= meteorCY+20:
@@ -623,6 +642,7 @@ def shootlaser():
         meteorCY = -40
         money += (coinsUpg + 1)*multi
         meteorsShotInSession += 1
+        shuffleMeteors()
 
 def langSelect():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
@@ -825,14 +845,13 @@ display.text(str(">"),0,15,Display.Color.White)
 display.commit()
 while True:
   buttons.scan()
-  #print(menu);time.sleep(0.1)
   if menu == 0:
     temp = random.randint(0,2)
-    if temp == 0 and meteors != 0 and selectMeteor[0]:
+    if temp == 0 and selectMeteor[0]:
       meteorAY += random.randint(fVA,fVB)/fVC
-    elif temp == 1 and meteors != 1 and selectMeteor[1]:
+    elif temp == 1 and selectMeteor[1]:
       meteorBY += random.randint(fVA,fVB)/fVC
-    elif temp == 2 and meteors != 0 and selectMeteor[2]:
+    elif temp == 2 and selectMeteor[2]:
       meteorCY += random.randint(fVA,fVB)/fVC
     if meteorAY >= 130:
       meteorAY = -40
@@ -841,14 +860,6 @@ while True:
     elif meteorCY >= 130:
       meteorCY = -40
     game()
-    #display.rect(int(0), int(21), int(cooldown+2), int(10), Display.Color.Gray, False)
-    #if inCooldown:
-    #  i += 2
-    #  display.rect(int(1), int(22), int(i), int(8), Display.Color.White, True)
-    #  if i >= cooldown:
-    #    i = 0
-    #    inCooldown = False
-    #display.commit()
   elif menu == 10:
       minigame()
   if flicker:
