@@ -858,7 +858,7 @@ meteors = 0
 coinsUpg = 0
 print('Meteor Shooter',version)
 print('Za Školu budućnosti, Stemi LAB')
-print('Github: https://github.com/MrUsername7/PublicStuff/tree/main/The%20Bit%20Superstars/Meteor%20Shooter')
+print('GitHub: https://github.com/MrUsername7/PublicStuff/tree/main/The%20Bit%20Superstars/Meteor%20Shooter')
 startup()
 mainmenu()
 display.text(str(">"),0,15,Display.Color.White)
