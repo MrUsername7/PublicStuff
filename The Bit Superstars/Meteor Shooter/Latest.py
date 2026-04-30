@@ -92,8 +92,10 @@ lang_en = [
 "(A) Let's play!",
 "Faster",
 "Translations:",
-"Language"
+"Language",
+"(BETA)"
     ]
+
 lang_hr = [
 "za Bit",
 "Teksture:",
@@ -126,9 +128,48 @@ lang_hr = [
 "Menu: Izlaz",
 "< and >: Pomici",
 "(A) Ajmo igrati!",
-"Brži",
+"Brzi",
 "Prijevodi:",
-"Jezik"
+"Jezik",
+"(BETA)"
+    ]
+
+lang_de = [
+"fur Bit",
+"Texturen:",
+"Programmierung:",
+"EMULIERT",
+"(B) Zuruck",
+"Spielen",
+"Geschaft",
+"Einstellungen",
+"Uber",
+"Klang: ",
+"Bestatigen",
+"Andern",
+"Auswahl",
+"Starker",
+"Laser",
+"Mehr",
+"Meteore",
+"Munzen",
+"< Geld und",
+"Fortschritt",
+"Multiplikator",
+"Hilfeseite ",
+"(A) Weiter...",
+"(B) Uberspringen",
+'< "Mehr Munzen"',
+"Upgrade",
+"",
+"A: Schiessen",
+"Menu: Beenden",
+"< und >: Bewegen",
+"(A) Los geht's!",
+"Schneller",
+"Ubersetzungen:",
+"Sprache",
+"(BETA)"
     ]
 
 startValue = None
@@ -168,12 +209,13 @@ flicker = False
 cupsList = [0,0,0,0,1,1,1,2] #  0 su vanzemaljci, 1 su +1 život, a 2 su +2 života
 tone = True
 code = 5
-version = "0.4.7 - PRE"
+version = "0.4.8 - PRE"
 lives = 1
 livesTick = 1
 totalDistance = 0
-lang = lang_en
+lang = lang_en[:]
 fastl = 0
+selectMeteor = [False, True, False]
 
 def shuffle(array):
     global lives, select, livesTick
@@ -196,13 +238,12 @@ def about():
   display.text(lang[1], int(0), int(28), Display.Color.White)
   display.text("Leon", int(8), int(36), Display.Color.White)
   display.text("Adrian", int(8), int(44), Display.Color.White)
-  display.text("Andrija", int(8), int(52), Display.Color.White)
-  display.text(lang[2], int(0), int(68), Display.Color.White)
-  display.text("Leon", int(8), int(76), Display.Color.White)
-  display.text(lang[32], int(0), int(92), Display.Color.White)
-  display.text("Leon", int(8), int(100), Display.Color.White)
+  display.text(lang[2], int(0), int(60), Display.Color.White)
+  display.text("Leon", int(8), int(68), Display.Color.White)
+  display.text(lang[32], int(0), int(84), Display.Color.White)
+  display.text("Leon", int(8), int(92), Display.Color.White)
   if emulated: display.text(lang[3], int(0), int(112), Display.Color.White)
-  display.text(lang[4], int(32), int(120), Display.Color.White)
+  display.text(lang[4], int(64-int(len(lang[4]))*4), int(120), Display.Color.White)
   display.commit()
 
 def mainmenu():
@@ -217,8 +258,6 @@ def mainmenu():
 
 def mainmenu2():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value, tone, temp
-  menu = 5
-  select = 0
   display.fill(Display.Color.Navy)
   display.text(lang[7], int(8), int(0), Display.Color.White)
   temp = lang[9]+str(tone)
@@ -231,10 +270,12 @@ def idk2():
     mainmenu()
   elif menu == 5:
     mainmenu2()
+  elif menu == 6:
+    langSelect()
 
 def scroll():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-  if menu == 1 or menu == 5:
+  if menu == 1 or menu == 5 or menu == 6:
     idk2()
     display.text(">",0,(select+1)*15,Display.Color.White)
     display.commit()
@@ -268,11 +309,12 @@ def game():
   drawgame()
   if meteorsShotInSession == 0:
     multi = 1
+    fVC = 7/4
   elif meteorsShotInSession == 10:
-    if fVC != 2:
+    if fVC != 5/4:
       if tone: piezo.tone(500, 150)
       if tone: piezo.tone(1000, 150)
-    fVC = 2
+    fVC = 5/4
   elif meteorsShotInSession == 25:
     if fVA != 2:
       if tone: piezo.tone(500, 150)
@@ -351,14 +393,12 @@ def minigame(aPressed=False): #nedovršeno
     display.text(item3, 64-len(item3)*4, 64, Display.Color.White)
     display.text(item4, 64-len(item4)*4, 72, Display.Color.White)
     display.text(item5, 64-len(item5)*4, 80, Display.Color.White)
-    #display.text(str(select), 60, 60, Display.Color.White)
     display.rect(posBoxX(), posBoxY(), int(40), int(40), Display.Color.White, False)
     if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
     display.commit()
   else:
     display.fill(0)
     item = cupsList[select]
-    display.text(item, 120, 120, Display.Color.White)
     if item == 0:
       display.blit(sprite_alien, 0, 0, 0)
     elif item == 1:
@@ -533,7 +573,9 @@ def idk():
   if menu == 1:
     return(4)
   elif menu == 5:
-    return(1)
+    return(2)
+  elif menu == 6:
+    return(3)
 
 def shootlaser():
   global fastl, inCooldown, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, meteorsShotInSession, shipPos, tone, mAH, mBH, mCH
@@ -582,22 +624,31 @@ def shootlaser():
         money += (coinsUpg + 1)*multi
         meteorsShotInSession += 1
 
+def langSelect():
+  global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
+  display.fill(Display.Color.Navy)
+  display.text(lang[33], int(8), int(0), Display.Color.White)
+  display.text("English", int(64-int(len("English"))*4), int(15), Display.Color.White)
+  display.text("Hrvatski", int(64-int(len("Hrvatski"))*4), int(30), Display.Color.White)
+  display.text("Deutsch "+lang[34], int(64-int(len("Deutsch "+lang[34]))*4), int(45), Display.Color.White)
+  if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
+
 def downButton():
-	global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-	if menu == 1 or menu == 5:
-	  select = (select+1)%idk()
-	  scroll()
+  global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
+  if menu == 1 or menu == 5 or menu == 6:
+    select = (select+1)%idk()
+    scroll()
 buttons.on_press(Buttons.Down, downButton)
 
 def upButton():
 	global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-	if menu == 1 or menu == 5:
+	if menu == 1 or menu == 5 or menu == 6:
 	  select = (select-1)%idk()
 	  scroll()
 buttons.on_press(Buttons.Up, upButton)
 
 def aButton():
-	global fastl, tone, code, step, select, i, x, menu, money, item, laser, item2, meteors, coinsUpg, value, shipX, shipPos, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, cooldown, inCooldown, multi
+	global fastl, tone, code, step, select, i, x, menu, money, item, laser, item2, meteors, coinsUpg, value, shipX, shipPos, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, cooldown, inCooldown, multi, lang
 	if menu == 0:
 	  shootlaser()
 	elif menu == 1:
@@ -652,7 +703,33 @@ def aButton():
 	  if select == 0:
 	    tone = not tone
 	    mainmenu2()
+	    display.text(">",0,15,Display.Color.White)
 	    display.commit()
+	  elif select == 1:
+	    menu = 6
+	    langSelect()
+	    if lang == lang_en:
+	      select = 0
+	      display.text(">",0,15,Display.Color.White)
+	    elif lang == lang_hr:
+	      select = 1
+	      display.text(">",0,30,Display.Color.White)
+	    elif lang == lang_de:
+	      select = 2
+	      display.text(">",0,45,Display.Color.White)
+	    display.commit()
+	elif menu == 6:
+	  if select == 0:
+	    lang = lang_en[:]
+	  elif select == 1:
+	    lang = lang_hr[:]
+	  elif select == 2:
+	    lang = lang_de[:]
+	  menu = 5
+	  select = 1
+	  mainmenu2()
+	  display.text(">",0,30,Display.Color.White)
+	  display.commit()
 	elif menu == 10:
 	    minigame(True)
 buttons.on_press(Buttons.A, aButton)
@@ -751,11 +828,11 @@ while True:
   #print(menu);time.sleep(0.1)
   if menu == 0:
     temp = random.randint(0,2)
-    if temp == 0 and meteors != 0:
+    if temp == 0 and meteors != 0 and selectMeteor[0]:
       meteorAY += random.randint(fVA,fVB)/fVC
-    elif temp == 1 and meteors != 1:
+    elif temp == 1 and meteors != 1 and selectMeteor[1]:
       meteorBY += random.randint(fVA,fVB)/fVC
-    elif temp == 2 and meteors != 0:
+    elif temp == 2 and meteors != 0 and selectMeteor[2]:
       meteorCY += random.randint(fVA,fVB)/fVC
     if meteorAY >= 130:
       meteorAY = -40
