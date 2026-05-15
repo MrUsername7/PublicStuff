@@ -105,7 +105,8 @@ class LVK:
         except IndexError:
             if cls.selectX == 1 and cls.selectY == 4:
                 cls.inputt = str(cls.inputt)+" "
-            cls.end()
+            else:
+                cls.end()
         cls.drawKeyboard()
         display.commit()
     @classmethod

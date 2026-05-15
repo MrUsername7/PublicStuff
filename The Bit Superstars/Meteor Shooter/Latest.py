@@ -1,3 +1,17 @@
+"""
+menus:
+0: game
+1: mainmenu
+2: shop
+3: helps
+4: about
+5: mainmenu2 (settings)
+6: langselect
+7: networkMenu
+8: keyboard
+9: connectToNet
+"""
+
 from Bit import *
 from framebuf import FrameBuffer, RGB565
 import time
@@ -9,11 +23,10 @@ import array
 begin()
 
 try:
-    _ = Bit.LEDs.C
+    _ = LEDs.C
     emulated = False
-except AttributeError:
+except NameError:
     emulated = True
-#emulated = False
 
 sprite_laser = FrameBuffer(bytearray(b'\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00\xF8\x00'), 3, 6, RGB565)
 sprite_coin2 = FrameBuffer(bytearray(b'\x00\x00\x00\x00\x00\x00\xFF\x70\xFF\x70\xFF\x70\xFF\x70\xFF\x70\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x70\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\x00\x00\x00\x00\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\xD4\x06\xD4\x06\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFF\xFF\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFF\xFF\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFF\xFF\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xD4\x06\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\xFD\xA0\xFD\xA0\xFD\xA0\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\xD4\x06\xFD\xA0\xFD\xA0\xFF\x70\xFF\x70\xFF\x70\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\x00\x00\x00\x00\xD4\x06\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xFD\xA0\xD4\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xD4\x06\xD4\x06\xD4\x06\xD4\x06\xD4\x06\x00\x00\x00\x00\x00\x00'), 11, 11, RGB565)
@@ -85,7 +98,7 @@ lang_en = [
 "(B) Skip",
 '< "More Coins"',
 "upgrade",
-"", #"< Cooldown",
+"Network", #"< Cooldown", lang[26], missing ram so nope
 "A: Shoot",
 "Menu: Exit",
 "< and >: Move",
@@ -93,7 +106,11 @@ lang_en = [
 "Faster",
 "Translations:",
 "Language",
-"(BETA)"
+"(BETA)",
+"SSID", #missing ram
+"Password", #missing ram
+"Connect", #missing ram
+"Connecting..." #missing ram
     ]
 
 lang_hr = [
@@ -123,7 +140,7 @@ lang_hr = [
 "(B) Preskoci",
 '< "Vise Novaca"',
 "nadogradnja",
-"",
+"Mreza",
 "A: Pucaj",
 "Menu: Izlaz",
 "< and >: Pomici",
@@ -131,7 +148,11 @@ lang_hr = [
 "Brzi",
 "Prijevodi:",
 "Jezik",
-"(BETA)"
+"(BETA)",
+"SSID",
+"Zaporka",
+"Spoji se",
+"Spajanje..."
     ]
 
 lang_de = [
@@ -169,7 +190,11 @@ lang_de = [
 "Schneller",
 "Ubersetzungen:",
 "Sprache",
-"(BETA)"
+"(BETA)",
+"SSID",
+"???",
+"???",
+"???"
     ]
 
 startValue = None
@@ -216,6 +241,149 @@ totalDistance = 0
 lang = lang_en[:]
 fastl = 0
 selectMeteor = [0, 1, 0]
+ssid = None
+pswd = None
+
+class LVK:
+    selectX = 0
+    selectY = 0
+    inputt = ''
+    shifted = False
+    keyboardLowercaseText = [
+    ["1","2","3","4","5","6","7","8","9","0","-","="],
+    ["q","w","e","r","t","y","u","i","o","p","[","]","#"], 
+    ["a","s","d","f","g","h","j","k","l",";","\'"], 
+    ["\\","z","x","c","v","b","n","m",",",".","/"]
+    ]
+    keyboardUppercaseText = [
+    ["!","\"","£","$","%","^","&","*","(",")","_","+"],
+    ["Q","W","E","R","T","Y","U","I","O","P","{","}","~"], 
+    ["A","S","D","F","G","H","J","K","L",":","@"], 
+    ["|","Z","X","C","V","B","N","M","<",">","?"]
+    ]
+
+    #Colors
+    textSelectedClr = 0 #33808 #31
+    textBgClr = 16904
+    textClr = 65535
+
+    @classmethod
+    def drawKeyboard(cls):
+        display.fill(16)
+        for i in range(0,4):
+            for j in range(0,13):
+                try:
+                    _ = cls.keyboardLowercaseText[i][j]
+                    if cls.selectX == j and cls.selectY == i:
+                        display.rect(int(j*8), int(i*8), int(8), int(8), cls.textSelectedClr, True)
+                    else:
+                        display.rect(int(j*8), int(i*8), int(8), int(8), cls.textBgClr, True)
+                    if cls.shifted:
+                        display.text(cls.keyboardUppercaseText[i][j], j*8, i*8, cls.textClr)
+                    else:
+                        display.text(cls.keyboardLowercaseText[i][j], j*8, i*8, cls.textClr)
+                except IndexError:
+                    pass
+        if cls.selectX == 0 and cls.selectY == 4:
+            display.rect(0, 32, 24, 8, cls.textSelectedClr, True)
+        else:
+            display.rect(0, 32, 24, 8, cls.textBgClr, True)
+        display.text('ESC', 0, 32, cls.textClr)
+        if cls.selectX == 0 and cls.selectY == 5:
+            display.rect(0, 40, 40, 8, cls.textSelectedClr, True)
+        else:
+            display.rect(0, 40, 40, 8, cls.textBgClr, True)
+        display.text('ENTER', 0, 40, cls.textClr)
+        if cls.selectX == 1 and cls.selectY == 4:
+            display.rect(24, 32, 40, 8, cls.textSelectedClr, True)
+        else:
+            display.rect(24, 32, 40, 8, cls.textBgClr, True)
+        display.text('SPACE', 24, 32, cls.textClr)
+        if len(cls.inputt) > 16:
+            display.text(cls.inputt[-16:], 0, 120, cls.textClr)
+        else:
+            display.text(cls.inputt, 0, 120, cls.textClr)
+        display.text("A: Select", 0, 48, cls.textClr)
+        display.text("B: Backspace", 0, 56, cls.textClr)
+        display.text("C: Shift Toggle", 0, 64, cls.textClr)
+        if emulated: display.text(lang[3], int(0), int(112), Display.Color.White)
+        display.commit()
+    @classmethod
+    def getMod(cls):
+        if cls.selectY == 0:
+            return 12
+        elif cls.selectY == 1:
+            return 13
+        elif cls.selectY == 2 or cls.selectY == 3:
+            return 11
+        elif cls.selectY == 4:
+            return 2
+        else:
+            return 1
+    @classmethod
+    def rightPress(cls):
+        cls.selectX = (cls.selectX+1)%cls.getMod()
+        cls.drawKeyboard()
+    @classmethod
+    def leftPress(cls):
+        cls.selectX = (cls.selectX-1)%cls.getMod()
+        cls.drawKeyboard()
+    @classmethod
+    def upPress(cls):
+        cls.selectY = (cls.selectY-1)%6
+        cls.selectX = max(0, min(cls.getMod()-1, cls.selectX))
+        cls.drawKeyboard()
+    @classmethod
+    def downPress(cls):
+        cls.selectY = (cls.selectY+1)%6
+        cls.selectX = max(0, min(cls.getMod()-1, cls.selectX))
+        cls.drawKeyboard()
+    @classmethod
+    def select(cls):
+        try:
+            if cls.shifted:
+                cls.inputt = str(cls.inputt)+cls.keyboardUppercaseText[cls.selectY][cls.selectX]
+            else:
+                cls.inputt = str(cls.inputt)+cls.keyboardLowercaseText[cls.selectY][cls.selectX]
+            cls.drawKeyboard()
+            display.commit()
+        except IndexError:
+            if cls.selectX == 1 and cls.selectY == 4:
+                cls.inputt = str(cls.inputt)+" "
+                cls.drawKeyboard()
+                display.commit()
+            else:
+                cls.end()
+    @classmethod
+    def init(cls):
+        global menu
+        cls.inputt = ""
+        cls.selectX, cls.selectY = 0,0
+        menu = 8
+        cls.drawKeyboard()
+    @classmethod
+    def end(cls):
+        global ssid, pswd, menu, select
+        if cls.selectY == 5:
+            if select == 0:
+                ssid = cls.inputt
+            elif select == 1:
+                pswd = cls.inputt
+        menu = 7
+        networkMenu()
+        scroll()
+        display.commit()
+        networkMenu()
+        scroll()
+        display.commit()
+    @classmethod
+    def shiftLock(cls):
+        cls.shifted = not cls.shifted
+        cls.drawKeyboard()
+    @classmethod
+    def backspace(cls):
+        cls.inputt = cls.inputt[:-1]
+        cls.drawKeyboard()
 
 def startup():
     display.fill(0)
@@ -284,7 +452,18 @@ def mainmenu2():
   temp = lang[9]+str(tone)
   display.text(temp,64-int(len(temp))*4,15,Display.Color.White)
   display.text(lang[33],64-len(lang[33])*4,30,Display.Color.White)
+  if False: display.text(lang[26],64-len(lang[26])*4,45,Display.Color.White)
   if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
+
+def networkMenu():
+    #lang[35] je ssid i lang[36] je lozinka
+    global menu, select
+    display.fill(16)
+    display.text(lang[26], 64-len(lang[26])*4, 0, Display.Color.White)
+    display.text(lang[35], 64-len(lang[35])*4, 15, Display.Color.White)
+    display.text(lang[36], 64-len(lang[36])*4, 30, Display.Color.White)
+    display.text(lang[37], 64-len(lang[37])*4, 45, Display.Color.White)
+    if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
 
 def idk2():
   if menu == 1:
@@ -293,10 +472,12 @@ def idk2():
     mainmenu2()
   elif menu == 6:
     langSelect()
+  elif menu == 7:
+    networkMenu()
 
 def scroll():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-  if menu == 1 or menu == 5 or menu == 6:
+  if menu == 1 or (menu >= 5 and menu <= 7):
     idk2()
     display.text(">",0,(select+1)*15,Display.Color.White)
     display.commit()
@@ -605,8 +786,11 @@ def idk():
   if menu == 1:
     return(4)
   elif menu == 5:
-    return(2)
+    if True: return(2)
+    else: return(3)
   elif menu == 6:
+    return(3)
+  elif menu == 7:
     return(3)
 
 def shootlaser():
@@ -668,22 +852,49 @@ def langSelect():
   display.text("Deutsch "+lang[34], int(64-int(len("Deutsch "+lang[34]))*4), int(45), Display.Color.White)
   if emulated: display.text(lang[3], int(0), int(120), Display.Color.White)
 
+def connectToNet():
+    global ssid, pswd, menu
+    menu = 9
+    import network, time
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(False)
+    time.sleep(1)
+    wlan.active(True)
+    wlan.disconnect()
+    if not wlan.isconnected():
+        display.fill(16)
+        display.text(lang[38],64-len(lang[38]),60)
+        wlan.connect(ssid, pswd)
+        timeout = 10
+        while not wlan.isconnected() and timeout > 0:
+            time.sleep(1)
+            timeout -= 1
+    if wlan.isconnected():
+        print("Connected!")
+        print("Network config:", wlan.ifconfig())
+    else:
+        print("Failed to connect")
+
 def downButton():
   global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-  if menu == 1 or menu == 5 or menu == 6:
+  if menu == 1 or (menu >= 5 and menu <= 7):
     select = (select+1)%idk()
     scroll()
+  elif menu == 8:
+    LVK.downPress()
 buttons.on_press(Buttons.Down, downButton)
 
 def upButton():
 	global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-	if menu == 1 or menu == 5 or menu == 6:
+	if menu == 1 or (menu >= 5 and menu <= 7):
 	  select = (select-1)%idk()
 	  scroll()
+	elif menu == 8:
+	    LVK.upPress()
 buttons.on_press(Buttons.Up, upButton)
 
 def aButton():
-	global fastl, tone, code, step, select, i, x, menu, money, item, laser, item2, meteors, coinsUpg, value, shipX, shipPos, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, cooldown, inCooldown, multi, lang
+	global ssid, pswd, fastl, tone, code, step, select, i, x, menu, money, item, laser, item2, meteors, coinsUpg, value, shipX, shipPos, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, cooldown, inCooldown, multi, lang
 	if menu == 0:
 	  shootlaser()
 	elif menu == 1:
@@ -753,6 +964,12 @@ def aButton():
 	      select = 2
 	      display.text(">",0,45,Display.Color.White)
 	    display.commit()
+	  elif select == 2:
+	    menu = 7
+	    select = 0
+	    networkMenu()
+	    display.text(">",0,15,Display.Color.White)
+	    display.commit()
 	elif menu == 6:
 	  if select == 0:
 	    lang = lang_en[:]
@@ -765,6 +982,15 @@ def aButton():
 	  mainmenu2()
 	  display.text(">",0,30,Display.Color.White)
 	  display.commit()
+	elif menu == 7:
+	    if select < 2:
+	        LVK.init()
+	    elif select == 2:
+	        print(ssid,pswd)
+	        if not (ssid == None or pswd == None):
+	            connectToNet()
+	elif menu == 8:
+	    LVK.select()
 	elif menu == 10:
 	    minigame(True)
 buttons.on_press(Buttons.A, aButton)
@@ -778,6 +1004,8 @@ def menuButton():
     menu = 1
     mainmenu()
     scroll()
+  elif menu == 8:
+    LVK.shiftLock()
 
 buttons.on_press(Buttons.C, menuButton)
 
@@ -801,15 +1029,17 @@ def bButton():
     mainmenu()
     display.text(">",0,45,Display.Color.White)
     display.commit()
-  elif menu >= 6 and not menu == 10:
-    menu = 1
+  elif menu >= 6 and menu < 8:
+    menu = 5
     select = 0
-    mainmenu()
+    mainmenu2()
     display.text(">",0,15,Display.Color.White)
     display.commit()
   elif menu == 3:
     menu = 0
     gamePrep()
+  elif menu == 8:
+    LVK.backspace()
   elif menu == 10:
     select += 1
     if tone: piezo.tone(200, 50)
@@ -831,6 +1061,8 @@ def rightButton():
 	  select = (select+1)%4
 	  buymenu()
 	  shopitem()
+	elif menu == 8:
+	  LVK.rightPress()
 buttons.on_press(Buttons.Right, rightButton)
 
 def leftButton():
@@ -848,6 +1080,8 @@ def leftButton():
 	  select = (select-1)%4
 	  buymenu()
 	  shopitem()
+	elif menu == 8:
+	  LVK.leftPress()
 buttons.on_press(Buttons.Left, leftButton)
 
 select = 0

@@ -35,24 +35,6 @@ _start_time = time.time()
 
 RGB565 = 1
 
-# =========================================================
-# COLORS
-# =========================================================
-class Display:
-    class Color:
-        Black  = (0, 0, 0)
-        White  = (255, 255, 255)
-        Red    = (255, 0, 0)
-        Maroon = (128, 0, 0)
-        Green  = (0, 255, 0)
-        Forest = (0, 128, 0)
-        Blue   = (0, 0, 255)
-        Navy   = (0, 0, 128)
-        Cyan   = (0, 255, 255)
-        Yellow = (255, 255, 0)
-        Purple = (128, 0, 128)
-        Gray   = (128, 128, 128)
-
 def _resolve_color(color):
     if color is None:
         raise TypeError("can't convert NoneType to int")
@@ -72,6 +54,24 @@ def _resolve_color(color):
         return (r, g, b)
 
     return color
+
+# =========================================================
+# COLORS
+# =========================================================
+class Display:
+    class Color:
+        Black  = _resolve_color(0)
+        White  = _resolve_color(65535)
+        Red    = _resolve_color(63488)
+        Maroon = _resolve_color(32768)
+        Green  = _resolve_color(2016)
+        Forest = _resolve_color(1040)
+        Blue   = _resolve_color(31)
+        Navy   = _resolve_color(16)
+        Cyan   = (0, 255, 255)
+        Yellow = (255, 255, 0)
+        Purple = (128, 0, 128)
+        Gray   = (128, 128, 128)
 
 def _tint(surface, color):
     surf = surface.copy()
@@ -111,7 +111,7 @@ FONT_SURFACE = None
 class DisplayWrapper:
 
     def fill(self, color):
-        _screen.fill(color)
+        _screen.fill(_resolve_color(color))
 
     def pixel(self, x, y, color):
         _screen.set_at((x, y), color)

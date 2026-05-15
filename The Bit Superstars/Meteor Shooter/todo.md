@@ -1,4 +1,5 @@
-* leaderboard (koristeći network lib)
-* tipkovnica (biti će pakao)
-* više tipa meteora
+* ~~leaderboard (koristeći network lib, ništa o ovome)~~
+* ~~tipkovnica~~
+* više tipova meteora
+* zvijezde u pozadini igre
 
