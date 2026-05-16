@@ -409,9 +409,9 @@ def minigame(aPressed=False): #nedovršeno
     display.blit(sprite_cup, int(0), int(86), 0)
     display.blit(sprite_cup, int(43), int(86), 0)
     display.blit(sprite_cup, int(86), int(86), 0)
-    item = "A:"
+    item = "C:"
     item2 = lang[10]
-    item3 = "B:"
+    item3 = "D:"
     item4 = lang[11]
     item5 = lang[12]
     display.text(item, 64-len(item)*4, 48, Display.Color.White)
