@@ -1,4 +1,4 @@
-* ~~leaderboard (koristeći network lib, ništa o ovome)~~
+* leaderboard (koristeći network lib)
 * ~~tipkovnica~~
 * više tipova meteora
 * zvijezde u pozadini igre
