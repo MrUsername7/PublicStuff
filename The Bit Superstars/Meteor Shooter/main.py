@@ -215,7 +215,7 @@ flicker = False
 cupsList = [0,0,0,0,1,1,1,2] #  0 su vanzemaljci, 1 su +1 život, a 2 su +2 života
 tone = True
 code = 5
-version = "1.1.2"
+version = "1.1.2a"
 lives = 1
 livesTick = 1
 totalDistance = 0
@@ -1062,9 +1062,9 @@ def menuButton():
     save()
     display.fill(16)
     display.text('webrepl on',0,0,65535)
-    display.text('pass 1234',8,0,65535)
-    display.text('port 8266, ip:',16,0,65535)
-    display.text(wlan.ifconfig()[0],24,0,65535)
+    display.text('pass 1234',0,8,65535)
+    display.text('port 8266, ip:',0,16,65535)
+    display.text(wlan.ifconfig()[0],0,24,65535)
     display.commit()
     import webrepl
     webrepl.start()
