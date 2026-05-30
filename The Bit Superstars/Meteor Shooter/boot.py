@@ -1,8 +1,9 @@
-
 import network, time
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 print('Connected:',str(wlan.isconnected()))
+from Bit import begin, display
+begin()
 try:
     with open('wifi.txt', 'r') as f:
         ssid = f.readline().strip()
@@ -10,10 +11,15 @@ try:
     if not wlan.isconnected():
         wlan.connect(ssid, pswd)
         time.sleep(5)
+        display.text(str(wlan.ifconfig()),0,0,65535)
+        display.commit()
+        time.sleep(2.5)
 except Exception as e:
-    from Bit import begin, display
-    begin()
-    display.text(repr(e), 64-len(repr(e))*4,60,65535)
+    display.text(repr(e),0,0,65535)
     display.commit()
-    import time
-    time.sleep(5)
+    time.sleep(2.5)
+if wlan.isconnected():
+    display.fill(0)
+    display.text('webrepl 1234',0,0,65535)
+    display.commit()
+    time.sleep(2.5)

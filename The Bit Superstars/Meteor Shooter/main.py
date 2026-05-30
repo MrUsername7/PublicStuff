@@ -1,4 +1,3 @@
-
 """
 menus:
 0: game
@@ -10,8 +9,9 @@ menus:
 6: langselect
 7: networkMenu
 8: keyboard
-9: connectToNet
+9: leaderboard
 """
+
 import network, gc
 gc.collect()
 wlan = network.WLAN(network.STA_IF)
@@ -215,7 +215,7 @@ flicker = False
 cupsList = [0,0,0,0,1,1,1,2] #  0 su vanzemaljci, 1 su +1 život, a 2 su +2 života
 tone = True
 code = 5
-version = "1.1.0"
+version = "1.1.1"
 lives = 1
 livesTick = 1
 totalDistance = 0
@@ -224,6 +224,7 @@ fastl = 0
 selectMeteor = [0, 1, 0]
 ssid = None
 pswd = None
+running = True
 
 class LVK:
     selectX = 0
@@ -233,7 +234,7 @@ class LVK:
     keyboardLowercaseText = [
       ["1","2","3","4","5","6","7","8","9","0","-","="],
       ["q","w","e","r","t","y","u","i","o","p","[","]","#"],
-      ["a","s","d","f","g","h","j","k","l",";","'"],
+      ["a","s","d","f","g","h","j","k","l",";","\'"],
       ["\\","z","x","c","v","b","n","m",",",".","/"]
     ]
     keyboardUppercaseText = [
@@ -382,8 +383,8 @@ def save():
     elif lang == lang_de:
       f.write('de\n')
     f.write(str(fastl)+'\n')
-    f.write(ssid+'\n')
-    f.write(pswd+'\n')
+    f.write(ssid or ''+'\n')
+    f.write(pswd or ''+'\n')
 
 def load():
   try:
@@ -834,7 +835,7 @@ def shootlaser():
       i -= fastl+3
     if meteorAY >= -20:
       mAH -= laser+1
-      if mAH == 0:
+      if mAH <= 0:
         mAH = 3
         meteorAY = -40
         money += (coinsUpg + 1)*multi
@@ -849,7 +850,7 @@ def shootlaser():
       i -= fastl+3
     if meteorBY >= -20:
       mBH -= laser+1
-      if mBH == 0:
+      if mBH <= 0:
         mBH = 3
         meteorBY = -40
         money += (coinsUpg + 1)*multi
@@ -864,7 +865,7 @@ def shootlaser():
       i -= fastl+3
     if meteorCY >= -20:
       mCH -= laser+1
-      if mCH == 0:
+      if mCH <= 0:
         mCH = 3
         meteorCY = -40
         money += (coinsUpg + 1)*multi
@@ -941,6 +942,7 @@ def aButton():
         coinsUpg += 1
       elif select == 3:
         fastl += 1
+      save()
       buymenu()
       shopitem()
     else:
@@ -994,11 +996,14 @@ def aButton():
       tone = True
       totalDistance = 0
       fastl = 0
-      ssid = ''
-      pswd = ''
+      ssid = None
+      pswd = None
       import os
       try:
         os.remove('data.txt')
+      except OSError:
+        pass
+      try:
         os.remove('wifi.txt')
       except OSError:
         pass
@@ -1051,11 +1056,12 @@ def menuButton():
     menu = 1
     mainmenu()
     scroll()
-  #elif menu == 1:
-    #import os, machine
-    #os.remove('main.py')
-    #os.remove('boot.py')
-    #machine.soft_reset()
+  elif menu == 1:
+    global running
+    running = False
+    save()
+    import webrepl
+    webrepl.start()
   elif menu == 8:
     LVK.shiftLock()
 buttons.on_press(Buttons.C, menuButton)
@@ -1134,6 +1140,7 @@ def leftButton():
 	elif menu == 8:
 	  LVK.leftPress()
 buttons.on_press(Buttons.Left, leftButton)
+
 select = 0
 menu = 1
 laser = 0
@@ -1146,7 +1153,7 @@ startup()
 mainmenu()
 display.text(str(">"),0,15,Display.Color.White)
 display.commit()
-while True:
+while running:
   buttons.scan()
   if menu == 0:
     temp = random.randint(0,2)
