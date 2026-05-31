@@ -11,15 +11,13 @@ try:
     if not wlan.isconnected():
         wlan.connect(ssid, pswd)
         time.sleep(5)
-        display.text(str(wlan.ifconfig()),0,0,65535)
+        display.text(wlan.ifconfig()[0],0,0,65535)
+        display.text(wlan.ifconfig()[1],0,8,65535)
+        display.text(wlan.ifconfig()[2],0,16,65535)
+        display.text(wlan.ifconfig()[3],0,24,65535)
         display.commit()
         time.sleep(2.5)
 except Exception as e:
     display.text(repr(e),0,0,65535)
-    display.commit()
-    time.sleep(2.5)
-if wlan.isconnected():
-    display.fill(0)
-    display.text('webrepl 1234',0,0,65535)
     display.commit()
     time.sleep(2.5)
