@@ -9,7 +9,9 @@ menus:
 6: langselect
 7: networkMenu
 8: keyboard
-9: leaderboard
+9: leaderboard #reserved
+10: minigame
+11: listNetworks
 """
 
 import network, gc
@@ -28,8 +30,7 @@ try:
 except NameError:
     emulated = True
 from sprite_data import *
-sprite_laser = FrameBuffer(laserSprite, 3, 6, RGB565)
-sprite_coin2 = FrameBuffer(coin2Sprite, 11, 11, RGB565)
+sprite_coin = FrameBuffer(coinSprite, 11, 11, RGB565)
 sprite_asteroid = FrameBuffer(asteroidSprite, 27, 25, RGB565)
 sprite_cup = FrameBuffer(cupSprite, 40, 40, RGB565)
 sprite_ship = FrameBuffer(shipSprite, 32, 48, RGB565)
@@ -87,7 +88,8 @@ lang_en = [
 "Leaderboard",
 'Save',
 'Reset data',
-'Reset'
+'Reset',
+'Refresh'
 ]
 
 lang_hr = [
@@ -132,7 +134,8 @@ lang_hr = [
 "Rang-lista",
 'Spremi',
 'Obrisi podatke',
-'Ponovno pokreni'
+'Ponovno pokreni',
+'Osvježi'
 ]
 
 lang_de = [
@@ -176,6 +179,7 @@ lang_de = [
 "???",
 '???',
 '???',
+'???',
 '???'
 ]
 
@@ -215,7 +219,7 @@ flicker = False
 cupsList = [0,0,0,0,1,1,1,2] #  0 su vanzemaljci, 1 su +1 život, a 2 su +2 života
 tone = True
 code = 5
-version = "1.2.0"
+version = "1.3.0 'ALPHA' BUGTEST"
 lives = 1
 livesTick = 1
 totalDistance = 0
@@ -225,6 +229,8 @@ selectMeteor = [0, 1, 0]
 ssid = None
 pswd = None
 running = True
+networks = None
+offsetX = 0
 
 class LVK:
     selectX = 0
@@ -257,38 +263,38 @@ class LVK:
                 try:
                     _ = cls.keyboardLowercaseText[i][j]
                     if cls.selectX == j and cls.selectY == i:
-                        display.rect(int(j*8), int(i*8), int(8), int(8), cls.textSelectedClr, True)
+                        display.rect(j*8+offsetX, i*8, 8, 8, cls.textSelectedClr, True)
                     else:
-                        display.rect(int(j*8), int(i*8), int(8), int(8), cls.textBgClr, True)
+                        display.rect(j*8+offsetX, i*8, 8, 8, cls.textBgClr, True)
                     if cls.shifted:
-                        display.text(cls.keyboardUppercaseText[i][j], j*8, i*8, cls.textClr)
+                        display.text(cls.keyboardUppercaseText[i][j], j*8+offsetX, i*8, cls.textClr)
                     else:
-                        display.text(cls.keyboardLowercaseText[i][j], j*8, i*8, cls.textClr)
+                        display.text(cls.keyboardLowercaseText[i][j], j*8+offsetX, i*8, cls.textClr)
                 except IndexError:
                     pass
         if cls.selectX == 0 and cls.selectY == 4:
-            display.rect(0, 32, 24, 8, cls.textSelectedClr, True)
+            display.rect(0+offsetX, 32, 24, 8, cls.textSelectedClr, True)
         else:
-            display.rect(0, 32, 24, 8, cls.textBgClr, True)
-        display.text('ESC', 0, 32, cls.textClr)
+            display.rect(0+offsetX, 32, 24, 8, cls.textBgClr, True)
+        display.text('ESC', 0+offsetX, 32, cls.textClr)
         if cls.selectX == 0 and cls.selectY == 5:
-            display.rect(0, 40, 40, 8, cls.textSelectedClr, True)
+            display.rect(0+offsetX, 40, 40, 8, cls.textSelectedClr, True)
         else:
-            display.rect(0, 40, 40, 8, cls.textBgClr, True)
-        display.text('ENTER', 0, 40, cls.textClr)
+            display.rect(0+offsetX, 40, 40, 8, cls.textBgClr, True)
+        display.text('ENTER', 0+offsetX, 40, cls.textClr)
         if cls.selectX == 1 and cls.selectY == 4:
-            display.rect(24, 32, 40, 8, cls.textSelectedClr, True)
+            display.rect(24+offsetX, 32, 40, 8, cls.textSelectedClr, True)
         else:
-            display.rect(24, 32, 40, 8, cls.textBgClr, True)
-        display.text('SPACE', 24, 32, cls.textClr)
+            display.rect(24+offsetX, 32, 40, 8, cls.textBgClr, True)
+        display.text('SPACE', 24+offsetX, 32, cls.textClr)
         if len(cls.inputt) > 16:
-            display.text(cls.inputt[-16:], 0, 120, cls.textClr)
+            display.text(cls.inputt[-16:], 0+offsetX, 120, cls.textClr)
         else:
-            display.text(cls.inputt, 0, 120, cls.textClr)
-        display.text("A: Select", 0, 48, cls.textClr)
-        display.text("B: Backspace", 0, 56, cls.textClr)
-        display.text("C: Shift Toggle", 0, 64, cls.textClr)
-        if emulated: display.text(lang[3], int(0), int(112), 65535)
+            display.text(cls.inputt, 0+offsetX, 120, cls.textClr)
+        display.text("A: Select", 0+offsetX, 48, cls.textClr)
+        display.text("B: Backspace", 0+offsetX, 56, cls.textClr)
+        display.text("C: Shift Toggle", 0+offsetX, 64, cls.textClr)
+        if emulated: display.text(lang[3], 0+offsetX, 112, 65535)
         display.commit()
     @classmethod
     def getMod(cls):
@@ -383,13 +389,11 @@ def save():
     elif lang == lang_de:
       f.write('de\n')
     f.write(str(fastl)+'\n')
-    f.write(ssid or ''+'\n')
-    f.write(pswd or ''+'\n')
 
 def load():
   try:
     with open('data.txt', 'r') as f:
-      global money, laser, meteors, coinsUpg, tone, totalDistance, lang, fastl, ssid, pswd
+      global money, laser, meteors, coinsUpg, tone, totalDistance, lang, fastl
       money = float(f.readline().strip())
       laser = int(f.readline().strip())
       meteors = int(f.readline().strip())
@@ -404,6 +408,11 @@ def load():
       elif lang == "de":
         lang = lang_de[:]
       fastl = int(f.readline().strip())
+  except:
+    pass
+  try:
+    with open('wifi.txt', 'r') as f:
+      global ssid, pswd
       ssid = f.readline().strip()
       pswd = f.readline().strip()
   except:
@@ -415,9 +424,9 @@ def startup():
     t1 = 'The Bit'
     t2 = 'Superstars'
     t3 = 'present...'
-    display.text(t1, 64-len(t1)*4, 52, 65535)
-    display.text(t2, 64-len(t2)*4, 60, 65535)
-    display.text(t3, 64-len(t3)*4, 68, 65535)
+    display.text(t1, 64-len(t1)*4+offsetX, 52, 65535)
+    display.text(t2, 64-len(t2)*4+offsetX, 60, 65535)
+    display.text(t3, 64-len(t3)*4+offsetX, 68, 65535)
     display.commit()
     time.sleep(1.25)
 
@@ -436,9 +445,9 @@ def shuffleMeteors():
     global selectMeteor, meteorAY, meteorBY, meteorCY
     while True:
         shuffle(selectMeteor)
-        if ((meteorAY <= -25 or selectMeteor[0]) and
-            (meteorBY <= -25 or selectMeteor[1]) and
-            (meteorCY <= -25 or selectMeteor[2])):
+        if (((meteorAY <= -25 or meteorAY >= 128) or selectMeteor[0]) and
+            ((meteorBY <= -25 or meteorBY >= 128) or selectMeteor[1]) and
+            ((meteorCY <= -25 or meteorCY >= 128) or selectMeteor[2])):
             break
 
 def about():
@@ -446,58 +455,72 @@ def about():
   menu = 4
   select = 0
   display.fill(16)
-  display.text("Meteor Shooter", int(8), int(0), 65535)
-  display.text(lang[0], int(36), int(8), 65535)
-  display.text(version, int(0), int(20), 65535)
-  display.text(lang[1], int(0), int(28), 65535)
-  display.text("Leon", int(8), int(36), 65535)
-  display.text("Adrian", int(8), int(44), 65535)
-  display.text(lang[2], int(0), int(60), 65535)
-  display.text("Leon", int(8), int(68), 65535)
-  display.text(lang[32], int(0), int(84), 65535)
-  display.text("Leon", int(8), int(92), 65535)
-  if emulated: display.text(lang[3], int(0), int(112), 65535)
-  display.text(lang[4], int(64-int(len(lang[4]))*4), int(120), 65535)
+  display.text("Meteor Shooter", 8+offsetX, 0, 65535)
+  display.text(lang[0], 36+offsetX, 8, 65535)
+  display.text(version, 0+offsetX, 20, 65535)
+  display.text(lang[1], 0+offsetX, 28, 65535)
+  display.text("Adrian", 8+offsetX, 36, 65535)
+  display.text(lang[2], 0+offsetX, 54, 65535)
+  display.text("Leon", 8+offsetX, 60, 65535)
+  display.text(lang[32], 0+offsetX, 76, 65535)
+  display.text("Leon", 8+offsetX, 84, 65535)
+  if emulated: display.text(lang[3], 0+offsetX, 112, 65535)
+  display.text(lang[4], 64-len(lang[4])*4+offsetX, 120, 65535)
   display.commit()
 
 def mainmenu():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
   display.fill(16)
-  display.text(lang[5], 64-len(lang[5])*4, (0-select+4)*15, 65535)
-  display.text(lang[6], 64-len(lang[6])*4, (0-select+5)*15, 65535)
-  display.text(lang[7], 64-len(lang[7])*4, (0-select+6)*15, 65535)
-  display.text(lang[8], 64-len(lang[8])*4, (0-select+7)*15, 65535)
-  display.text(lang[38], 64-len(lang[38])*4, (0-select+8)*15, 65535)
-  display.fill_rect(0, 0, 128, 8, 16)
-  display.text("METEOR SHOOT>R", 8, 0, 65535)
-  if emulated: display.text(lang[3], 0, 120, 65535)
+  display.text(lang[5], 64-len(lang[5])*4+offsetX, (0-select+4)*15, 65535)
+  display.text(lang[6], 64-len(lang[6])*4+offsetX, (0-select+5)*15, 65535)
+  display.text(lang[7], 64-len(lang[7])*4+offsetX, (0-select+6)*15, 65535)
+  display.text(lang[8], 64-len(lang[8])*4+offsetX, (0-select+7)*15, 65535)
+  display.text(lang[38], 64-len(lang[38])*4+offsetX, (0-select+8)*15, 65535)
+  display.rect(0+offsetX, 0, 128, 8, 16, 1)
+  display.text("METEOR SHOOT>R", 8+offsetX, 0, 65535)
+  if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
 
 def mainmenu2():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value, tone, temp
   display.fill(16)
   temp = lang[9]+str(tone)
-  display.text(temp,64-int(len(temp))*4,(0-select+4)*15,65535)
-  display.text(lang[33],64-len(lang[33])*4,(0-select+5)*15,65535)
-  display.text(lang[39],64-len(lang[39])*4,(0-select+6)*15,65535)
-  display.text(lang[40],64-len(lang[40])*4,(0-select+7)*15,65535)
-  display.text(lang[41],64-len(lang[41])*4,(0-select+8)*15,65535)
-  if not emulated: display.text(lang[26],64-len(lang[26])*4,(0-select+9)*15,65535)
-  display.fill_rect(0, 0, 128, 8, 16)
-  display.text(lang[7], 64-len(lang[7])*4, int(0), 65535)
-  if emulated: display.text(lang[3], int(0), int(120), 65535)
+  display.text(temp,64-len(temp)*4+offsetX,(0-select+4)*15,65535)
+  display.text(lang[33],64-len(lang[33])*4+offsetX,(0-select+5)*15,65535)
+  display.text(lang[39],64-len(lang[39])*4+offsetX,(0-select+6)*15,65535)
+  display.text(lang[40],64-len(lang[40])*4+offsetX,(0-select+7)*15,65535)
+  display.text(lang[41],64-len(lang[41])*4+offsetX,(0-select+8)*15,65535)
+  if not emulated: display.text(lang[26],64-len(lang[26])*4+offsetX,(0-select+9)*15,65535)
+  display.rect(0+offsetX, 0, 128, 8, 16, 1)
+  display.text(lang[7], 64-len(lang[7])*4+offsetX, 0, 65535)
+  if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
 
 def networkMenu():
     #lang[35] je ssid i lang[36] je lozinka
     global menu, select
     display.fill(16)
-    display.text(lang[35], 64-len(lang[35])*4, (0-select+4)*15, 65535)
-    display.text(lang[36], 64-len(lang[36])*4, (0-select+5)*15, 65535)
-    display.text(lang[37], 64-len(lang[37])*4, (0-select+6)*15, 65535)
-    display.fill_rect(0, 0, 128, 8, 16)
-    display.text(lang[26], 64-len(lang[26])*4, 0, 65535)
-    if emulated: display.text(lang[3], int(0), int(120), 65535)
+    display.text(lang[35], 64-len(lang[35])*4+offsetX, (0-select+4)*15, 65535)
+    display.text(lang[36], 64-len(lang[36])*4+offsetX, (0-select+5)*15, 65535)
+    display.text(lang[37], 64-len(lang[37])*4+offsetX, (0-select+6)*15, 65535)
+    display.rect(0+offsetX, 0, 128, 8, 16, 1)
+    display.text(lang[26], 64-len(lang[26])*4+offsetX, 0, 65535)
+    if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
 
-def idk2():
+def scanNetworks():
+    global networks, wlan
+    display.fill(16)
+    display.text('...', 52+offsetX, 60, 65535)
+    display.commit()
+    networks = wlan.scan()
+
+def listNetworks():
+    global networks, wlan
+    display.fill(16)
+    display.text(lang[35], 64-len(lang[35])*4+offsetX, 0, 65535)
+    display.text(lang[42], 64-len(lang[42])*4+offsetX, (0-select+4)*15, 65535)
+    for i in range(5,len(networks)+5):
+        display.text(networks[i-5][0].decode(), 64-len(networks[i-5][0].decode())*4+offsetX, (0-select+i)*15, 65535)
+
+def appropriateMenu():
   if menu == 1:
     mainmenu()
   elif menu == 5:
@@ -506,12 +529,14 @@ def idk2():
     langSelect()
   elif menu == 7:
     networkMenu()
+  elif menu == 11:
+    listNetworks()
 
 def scroll():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-  if menu == 1 or (menu >= 5 and menu <= 7):
-    idk2()
-    display.text(">",0,60,65535)
+  if menu == 1 or (menu >= 5 and menu <= 7) or menu == 11:
+    appropriateMenu()
+    display.text(">",0+offsetX,60,65535)
     display.commit()
 
 def minigameSetup():
@@ -523,19 +548,19 @@ def minigameSetup():
 def drawgame():
   global shipX, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, lives, livesTick, shipPos
   display.fill(0)
-  display.blit(sprite_ship, int(shipX+3), int(80), 0)
-  display.blit(sprite_asteroid, int(0), int(meteorAY), 0)
-  display.blit(sprite_asteroid, int(52), int(meteorBY), 0)
-  display.blit(sprite_asteroid, int(104), int(meteorCY), 0)
+  display.blit(sprite_ship, shipX+3+offsetX, 80, 0)
+  display.blit(sprite_asteroid, 0+offsetX, int(meteorAY), 0)
+  display.blit(sprite_asteroid, 52+offsetX, int(meteorBY), 0)
+  display.blit(sprite_asteroid, 104+offsetX, int(meteorCY), 0)
   shipPos = ((shipX+4)/52)+1
-  display.blit(sprite_coin2, int(0), int(0), 0)
-  display.text(str(round(money)), int(13), int(0), 65535)
-  display.text(str(coinsUpg+1), int(0), int(12), 65535)
+  display.blit(sprite_coin, 0+offsetX, 0, 0)
+  display.text(str(round(money)), 13+offsetX, 0, 65535)
+  display.text(str(coinsUpg+1), 0+offsetX, 12, 65535)
   if multi > 1:
-    display.text(str("x"), int(13 + len(str(round(money)))*8), int(0), 65535)
-    display.text(str(multi), int(21 + len(str(round(money)))*8), int(0), 65535)
-  display.blit(sprite_life, 0, 31, 0)
-  display.text(str(lives)+","+str(livesTick), 11, 31, 65535)
+    display.text(str("x"), 13 + len(str(round(money)))*8+offsetX, 0, 65535)
+    display.text(str(multi), 21 + len(str(round(money)))*8+offsetX, 0, 65535)
+  display.blit(sprite_life, 0+offsetX, 31, 0)
+  display.text(str(lives)+","+str(livesTick), 11+offsetX, 31, 65535)
 
 def game():
   global totalDistance, livesTick, lives, shipX, meteorAY, meteorBY, meteorCY, shipPos, money, meteorKill, meteorNoKill, fVA, fVB, fVC, meteorsShotInSession, multi, menu
@@ -575,7 +600,7 @@ def game():
     fVA = 5
     fVB = 7
     multi = 2
-  if emulated: display.text(lang[3], int(0), int(120), 65535)
+  if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
   display.commit()
   if livesTick == 0:
     if shipPos == 1 and meteorNoKill > meteorAY > meteorKill:
@@ -609,40 +634,39 @@ def minigame(aPressed=False): #nedovršeno
   menu = 10
   if not aPressed:
     display.fill(0)
-    display.blit(sprite_cup, int(0), int(0), 0)
-    display.blit(sprite_cup, int(43), int(0), 0)
-    display.blit(sprite_cup, int(86), int(0), 0)
-    display.blit(sprite_cup, int(0), int(43), 0)
-    display.blit(sprite_cup, int(86), int(43), 0)
-    display.blit(sprite_cup, int(0), int(86), 0)
-    display.blit(sprite_cup, int(43), int(86), 0)
-    display.blit(sprite_cup, int(86), int(86), 0)
+    _cupPos = (
+        (00, 00), (43, 00), (86, 00),
+        (00, 43),           (86, 43),
+        (00, 86), (43, 86), (86, 86)
+    )
+    for x, y in _cupPos:
+        display.blit(sprite_cup, x+offsetX, y, 0)
     item = "A:"
     item2 = lang[10]
     item3 = "B:"
     item4 = lang[11]
     item5 = lang[12]
-    display.text(item, 64-len(item)*4, 48, 65535)
-    display.text(item2, 64-len(item2)*4, 56, 65535)
-    display.text(item3, 64-len(item3)*4, 64, 65535)
-    display.text(item4, 64-len(item4)*4, 72, 65535)
-    display.text(item5, 64-len(item5)*4, 80, 65535)
-    display.rect(posBoxX(), posBoxY(), int(40), int(40), 65535, False)
-    if emulated: display.text(lang[3], int(0), int(120), 65535)
+    display.text(item, 64-len(item)*4+offsetX, 48, 65535)
+    display.text(item2, 64-len(item2)*4+offsetX, 56, 65535)
+    display.text(item3, 64-len(item3)*4+offsetX, 64, 65535)
+    display.text(item4, 64-len(item4)*4+offsetX, 72, 65535)
+    display.text(item5, 64-len(item5)*4+offsetX, 80, 65535)
+    display.rect(posBoxX()+offsetX, posBoxY(), 40, 40, 65535, 0)
+    if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
     display.commit()
   else:
     for i in range(44,14,-1):
       display.fill(0)
-      display.blit(sprite_cup, 44, i, 0)
+      display.blit(sprite_cup, 44+offsetX, i, 0)
       display.commit()
     item = cupsList[select]
     if item == 0:
-      display.blit(sprite_alien, 53, 50, 0)
+      display.blit(sprite_alien, 53+offsetX, 50, 0)
     elif item == 1:
-      display.blit(sprite_life, 59, 50, 0)
+      display.blit(sprite_life, 59+offsetX, 50, 0)
     elif item == 2:
-      display.blit(sprite_life2times, 49, 50, 0)
-    if emulated: display.text(lang[3], int(0), int(120), 65535)
+      display.blit(sprite_life2times, 49+offsetX, 50, 0)
+    if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
     display.commit()
     time.sleep(1)
     lives += item
@@ -655,13 +679,13 @@ def minigame(aPressed=False): #nedovršeno
 def buymenu():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
   display.fill(16)
-  display.blit(sprite_coin2, int(0), int(0), 0)
-  display.text(str(money), int(13), int(0), 65535)
-  display.rect(int(36), int(36), int(56), int(56), Display.Color.Gray, True)
-  display.rect(int(32), int(32), int(64), int(64), 0, True)
-  display.rect(int(0), int(40), int(16), int(48), 0, True)
-  display.rect(int(112), int(40), int(16), int(48), 0, True)
-  if emulated: display.text(lang[3], int(0), int(120), 65535)
+  display.blit(sprite_coin, 0+offsetX, 0, 0)
+  display.text(str(money), 13+offsetX, 0, 65535)
+  display.rect(36+offsetX, 36, 56, 56, 33808, 1)
+  display.rect(32+offsetX, 32, 64, 64, 0, 1)
+  display.rect(0+offsetX, 40, 16, 48, 0, 1)
+  display.rect(112+offsetX, 40, 16, 48, 0, 1)
+  if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
   shopitem()
 
 def buyscrollr(startValue, targetValue, step):
@@ -670,14 +694,14 @@ def buyscrollr(startValue, targetValue, step):
   while i != targetValue:
     i = i - step 
     display.fill(16)
-    display.blit(sprite_coin2, int(0), int(0), 0)
-    display.text(str(money), int(13), int(0), 65535)
-    display.rect(int(40 + i), int(40), int(48), int(48), 0, True)
-    display.rect(int(-32 + i), int(40), int(48), int(48), 0, True)
-    display.rect(int(112 + i), int(40), int(48), int(48), 0, True)
-    display.rect(int(-72 + i), int(40), int(16), int(48), 0, True)
-    display.rect(int(184 + i), int(40), int(48), int(48), 0, True)
-    if emulated: display.text(lang[3], int(0), int(120), 65535)
+    display.blit(sprite_coin, 0+offsetX, 0, 0)
+    display.text(str(money), 13+offsetX, 0, 65535)
+    display.rect(40 + i+offsetX, 40, 48, 48, 0, 1)
+    display.rect(-32 + i+offsetX, 40, 48, 48, 0, 1)
+    display.rect(112 + i+offsetX, 40, 48, 48, 0, 1)
+    display.rect(-72 + i+offsetX, 40, 16, 48, 0, 1)
+    display.rect(184 + i+offsetX, 40, 48, 48, 0, 1)
+    if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
     display.commit()
 
 def buymenu2(startValue, targetValue, step):
@@ -686,18 +710,18 @@ def buymenu2(startValue, targetValue, step):
   while i != targetValue:
     i = i - step
     display.fill(16)
-    display.blit(sprite_coin2, int(0), int(0), 0)
-    display.text(str(money), int(13), int(0), 65535)
-    display.rect(int(40 - i / 2), int(40 - i / 2), int(48 + i), int(48 + i), 0, True)
-    display.rect(int(0), int(40), int(16), int(48), 0, True)
-    display.rect(int(112), int(40), int(16), int(48), 0, True)
-    if emulated: display.text(lang[3], int(0), int(120), 65535)
+    display.blit(sprite_coin, 0+offsetX, 0, 0)
+    display.text(str(money), 13+offsetX, 0, 65535)
+    display.rect(int(40-i/2+offsetX), int(40-i/2),48+i,48+i,0,1)
+    display.rect(0+offsetX, 40, 16, 48, 0, 1)
+    display.rect(112+offsetX, 40, 16, 48, 0, 1)
+    if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
     display.commit()
 
 def shopitem():
   global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value, temp, fastl
-  display.blit(sprite_coin2, int(0), int(0), 0)
-  display.text(str(money), int(13), int(0), 65535)
+  display.blit(sprite_coin, 0+offsetX, 0, 0)
+  display.text(str(money), 13+offsetX, 0, 65535)
   if select == 0:
     item = lang[13]
     item2 = lang[14]
@@ -742,55 +766,52 @@ def shopitem():
         value = 9999
   else:
     item = 'ERR01'
-  display.text(str(item), int(64 - len(item) * 4), int(56), 65535)
-  display.text(str(item2), int(64 - len(item2) * 4), int(64), 65535)
+  display.text(str(item), 64 - len(item) * 4+offsetX, 56, 65535)
+  display.text(str(item2), 64 - len(item2) * 4+offsetX, 64, 65535)
   if value == 9999:
     temp = "MAX"
   else:
     temp = value
-  display.text(str(temp), int(64 - len(str(temp)) * 4), int(96), 65535)
-  if emulated: display.text(lang[3], int(0), int(120), 65535)
+  display.text(str(temp), 64-len(str(temp)) * 4+offsetX, 96, 65535)
+  if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
   display.commit()
 
 def helps():
   global menu, money, multi, coinsUpg, cooldown, item, item2, item3
   menu = 3
   display.fill(0)
-  display.blit(sprite_coin2, int(0), int(0), 0)
-  display.text(str(round(money)), int(13), int(0), 65535)
-  display.text(str("x"), int(13 + len(str(round(money)))*8), int(0), 65535)
-  display.text(str(multi), int(21 + len(str(round(money)))*8), int(0), 65535)
-  display.text(str(coinsUpg+1), int(0), int(12), 65535)
-  display.text(str(lives)+","+str(0), 11, 31, 65535)
-  display.blit(sprite_life, 0, 31, 0)
+  display.blit(sprite_coin, 0+offsetX, 0, 0)
+  display.text(str(round(money)), 13+offsetX, 0, 65535)
+  display.text(str("x"), 13 + len(str(round(money)))*8+offsetX, 0, 65535)
+  display.text(str(multi), 21 + len(str(round(money)))*8+offsetX, 0, 65535)
+  display.text(str(coinsUpg+1), 0+offsetX, 12, 65535)
+  display.text(str(lives)+",0", 11+offsetX, 31, 65535)
+  display.blit(sprite_life, 0+offsetX, 31, 0)
   if select == 0:
-    display.text(lang[18], int(40), int(0), 65535)
-    display.text(lang[19], int(40), int(8), 65535)
-    display.text(lang[20], int(40), int(16), 65535)
+    display.text(lang[18], 40+offsetX, 0, 65535)
+    display.text(lang[19], 40+offsetX, 8, 65535)
+    display.text(lang[20], 40+offsetX, 16, 65535)
     item = lang[21]+"1/3"
     item2 = lang[22]
     item3 = lang[23]
   elif select == 1:
-    display.text(lang[24], int(10), int(12), 65535)
-    display.text(lang[25], int(26), int(18), 65535)
+    display.text(lang[24], 10+offsetX, 12, 65535)
+    display.text(lang[25], 26+offsetX, 18, 65535)
     item = lang[21]+"2/3"
-  elif select == 3:
-    display.text(lang[26], int(26), int(22), 65535)
-    item = lang[21]+"(3/4)"
   elif select == 2:
-    display.text(lang[27], int(0), int(40), 65535)
-    display.text(lang[28], int(0), int(48), 65535)
-    display.text(lang[29], int(0), int(56), 65535)
+    display.text(lang[27], 0+offsetX, 40, 65535)
+    display.text(lang[28], 0+offsetX, 48, 65535)
+    display.text(lang[29], 0+offsetX, 56, 65535)
     item = lang[21]+"3/3"
     item2 = lang[30]
-  display.text(str(item), int(64 - len(item) * 4), int(104), 65535)
-  display.text(str(item2), int(64 - len(item2) * 4), int(112), 65535)
-  display.text(str(item3), int(64 - len(item3) * 4), int(120), 65535)
-  if emulated: display.text(lang[3], int(0), int(96), 65535)
+  display.text(str(item), 64 - len(item) * 4+offsetX, 104, 65535)
+  display.text(str(item2), 64 - len(item2) * 4+offsetX, 112, 65535)
+  display.text(str(item3), 64 - len(item3) * 4+offsetX, 120, 65535)
+  if emulated: display.text(lang[3], 0+offsetX, 96, 65535)
   display.commit()
 
 def gamePrep():
-	global select, menu, shipX, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, lives, meteors, selectMeteor
+	global select, menu, shipX, meteorAY, meteorBY, meteorCY, meteorsShotInSession, fVA, fVB, fVC, lives, meteors, selectMeteor, mAH, mBH, mCH
 	select = 0
 	menu = 0
 	shipX = -4
@@ -814,7 +835,8 @@ def gamePrep():
 	shuffleMeteors()
 	game()
 
-def idk():
+def selectModulo():
+  global emulated, networks
   if menu == 1:
     return(5)
   elif menu == 5:
@@ -824,19 +846,26 @@ def idk():
     return(3)
   elif menu == 7:
     return(3)
+  elif menu == 11:
+    temp = len(networks)+1
+    return(temp)
+
+def drawlaser(untilWhere):
+    global shipX, fastl
+    i = 79
+    while not i <= untilWhere+20:
+      drawgame()
+      display.rect(shipX+15+offsetX, i, 3, 6, 63488, 1)
+      display.commit()
+      i -= fastl+3
 
 def shootlaser():
   global fastl, inCooldown, meteorAY, meteorBY, meteorCY, money, coinsUpg, multi, meteorsShotInSession, shipPos, tone, mAH, mBH, mCH
   if tone: piezo.tone(1000,50)
   inCooldown = True
   if shipPos == 1:
-    i = 79
-    while not i <= meteorAY+20:
-      drawgame()
-      display.blit(sprite_laser, shipX+15, i, 0)
-      display.commit()
-      i -= fastl+3
-    if meteorAY >= -20:
+    drawlaser(meteorAY)
+    if meteorKill > meteorAY >= -20:
       mAH -= laser+1
       if mAH <= 0:
         mAH = 3
@@ -845,13 +874,8 @@ def shootlaser():
         meteorsShotInSession += 1
         shuffleMeteors()
   elif shipPos == 2:
-    i = 79
-    while not i <= meteorBY+20:
-      drawgame()
-      display.blit(sprite_laser, shipX+15, i, 0)
-      display.commit()
-      i -= fastl+3
-    if meteorBY >= -20:
+    drawlaser(meteorBY)
+    if meteorKill > meteorBY >= -20:
       mBH -= laser+1
       if mBH <= 0:
         mBH = 3
@@ -860,13 +884,8 @@ def shootlaser():
         meteorsShotInSession += 1
         shuffleMeteors()
   elif shipPos == 3:
-    i = 79
-    while not i <= meteorCY+20:
-      drawgame()
-      display.blit(sprite_laser, shipX+15, i, 0)
-      display.commit()
-      i -= fastl+3
-    if meteorCY >= -20:
+    drawlaser(meteorCY)
+    if meteorKill > meteorCY >= -20:
       mCH -= laser+1
       if mCH <= 0:
         mCH = 3
@@ -878,17 +897,21 @@ def shootlaser():
 def langSelect():
   global startValue, targetValue, step, mod, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
   display.fill(16)
-  display.text(lang[33], 64-len(lang[33])*4, int(0), 65535)
-  display.text("English", 64-len("English")*4, (0-select+4)*15, 65535)
-  display.text("Hrvatski", 64-len("Hrvatski")*4, (0-select+5)*15, 65535)
-  display.text("Deutsch "+lang[34], 64-len("Deutsch "+lang[34])*4, (0-select+6)*15, 65535)
-  if emulated: display.text(lang[3], int(0), int(120), 65535)
+  display.text(lang[33], 64-len(lang[33])*4+offsetX, 0, 65535)
+  display.text("English", 64-len("English")*4+offsetX, (0-select+4)*15, 65535)
+  display.text("Hrvatski", 64-len("Hrvatski")*4+offsetX, (0-select+5)*15, 65535)
+  display.text("Deutsch "+lang[34], 64-len("Deutsch "+lang[34])*4+offsetX, (0-select+6)*15, 65535)
+  if emulated: display.text(lang[3], 0+offsetX, 120, 65535)
 
 def wifi_connect_request():
+  display.fill(16)
+  display.text('...', 52+offsetX, 60, 65535)
+  display.commit()
+  if any(net[0].decode() == ssid for net in wlan.scan()):
     global ssid, pswd
     with open('wifi.txt', 'w') as f:
-        f.write(ssid + '\n')
-        f.write(pswd + '\n')
+      f.write(ssid + '\n')
+      f.write(pswd + '\n')
     save()
     wlan.disconnect()
     import machine
@@ -896,8 +919,8 @@ def wifi_connect_request():
 
 def downButton():
   global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-  if menu == 1 or (menu >= 5 and menu <= 7):
-    select = (select+1)%idk()
+  if menu == 1 or (menu >= 5 and menu <= 7) or menu == 11:
+    select = (select+1)%selectModulo()
     scroll()
   elif menu == 8:
     LVK.downPress()
@@ -905,11 +928,11 @@ buttons.on_press(Buttons.Down, downButton)
 
 def upButton():
 	global startValue, targetValue, step, select, i, x, menu, item, laser, item2, meteors, coinsUpg, value
-	if menu == 1 or (menu >= 5 and menu <= 7):
-	  select = (select-1)%idk()
+	if menu == 1 or (menu >= 5 and menu <= 7) or menu == 11:
+	  select = (select-1)%selectModulo()
 	  scroll()
 	elif menu == 8:
-	    LVK.upPress()
+	  LVK.upPress()
 buttons.on_press(Buttons.Up, upButton)
 
 def aButton():
@@ -928,7 +951,7 @@ def aButton():
       menu = 5
       select = 0
       mainmenu2()
-      display.text(">",0,60,65535)
+      display.text(">",0+offsetX,60,65535)
       display.commit()
     elif select == 3:
       menu = 4
@@ -951,12 +974,12 @@ def aButton():
     else:
       temp = value != 9999
       if temp:
-        display.text(str(money), int(13), int(0), Display.Color.Red)
+        display.text(str(money), 13+offsetX, 0, 63488)
         display.commit()
       if tone: piezo.tone(125, 50)
       time.sleep(0.25)
       if temp:
-        display.text(str(money), int(13), int(0), 65535)
+        display.text(str(money), 13+offsetX, 0, 65535)
         display.commit()
   elif menu == 3:
     if select == 2:
@@ -969,24 +992,24 @@ def aButton():
     if select == 0:
       tone = not tone
       mainmenu2()
-      display.text(">",0,60,65535)
+      display.text(">",0+offsetX,60,65535)
       display.commit()
     elif select == 1:
       menu = 6
-      langSelect()
       if lang == lang_en:
         select = 0
       elif lang == lang_hr:
         select = 1
       elif lang == lang_de:
         select = 2
-      display.text(">",0,60,65535)
+      langSelect()
+      display.text(">",0+offsetX,60,65535)
       display.commit()
     elif select == 2:
       save()
       print('Save OK')
-      display.text(lang[39],64-len(lang[39])*4,60,16)
-      display.text('OK',56,60,65535)
+      display.text(lang[39],64-len(lang[39])*4+offsetX,60,16)
+      display.text('OK',56+offsetX,60,65535)
       display.commit()
     elif select == 3:
       global money, laser, meteors, coinsUpg, tone, totalDistance, lang, fastl, ssid, pswd
@@ -1000,17 +1023,13 @@ def aButton():
       ssid = None
       pswd = None
       import os
-      try:
-        os.remove('data.txt')
-      except OSError:
-        pass
-      try:
-        os.remove('wifi.txt')
-      except OSError:
-        pass
+      try: os.remove('data.txt')
+      except OSError: pass
+      try: os.remove('wifi.txt')
+      except OSError: pass
       print('Reset OK')
-      display.text(lang[40],64-len(lang[40])*4,60,16)
-      display.text('OK',56,60,65535)
+      display.text(lang[40],64-len(lang[40])*4+offsetX,60,16)
+      display.text('OK',56+offsetX,60,65535)
       display.commit()
     elif select == 4:
       save()
@@ -1020,7 +1039,7 @@ def aButton():
       menu = 7
       select = 0
       networkMenu()
-      display.text(">",0,60,65535)
+      display.text(">",0+offsetX,60,65535)
       display.commit()
   elif menu == 6:
     if select == 0:
@@ -1032,10 +1051,17 @@ def aButton():
     menu = 5
     select = 1
     mainmenu2()
-    display.text(">",0,60,65535)
+    display.text(">",0+offsetX,60,65535)
     display.commit()
   elif menu == 7:
-      if select < 2:
+      if select == 0:
+          menu = 11
+          select = 0
+          scanNetworks()
+          listNetworks()
+          display.text(">",0+offsetX,60,65535)
+          display.commit()
+      elif select == 1:
           LVK.init()
       elif select == 2:
           print(ssid,pswd)
@@ -1045,6 +1071,21 @@ def aButton():
       LVK.select()
   elif menu == 10:
       minigame(True)
+  elif menu == 11:
+      if select == 0:
+          menu = 11
+          select = 0
+          scanNetworks()
+          listNetworks()
+          display.text(">",0+offsetX,60,65535)
+          display.commit()
+      else:
+          ssid = networks[select-1][0].decode()
+          menu = 7
+          select = 0
+          networkMenu()
+          display.text(">",0+offsetX,60,65535)
+          display.commit()
 buttons.on_press(Buttons.A, aButton)
 
 def menuButton():
@@ -1062,13 +1103,13 @@ def menuButton():
     running = False
     save()
     display.fill(16)
-    display.text('webrepl on',0,0,65535)
-    display.text('pass 1234',0,8,65535)
-    display.text('port 8266, ip:',0,16,65535)
-    display.text(wlan.ifconfig()[0],0,24,65535)
+    display.text('webrepl on',0+offsetX,0,65535)
+    display.text('pass 1234',0+offsetX,8,65535)
+    display.text('port 8266, ip:',0+offsetX,16,65535)
+    display.text(wlan.ifconfig()[0],0+offsetX,24,65535)
     display.commit()
     import webrepl
-    webrepl.start()
+    webrepl.start(password='1234')
   elif menu == 8:
     LVK.shiftLock()
 buttons.on_press(Buttons.C, menuButton)
@@ -1079,25 +1120,25 @@ def bButton():
     menu = 1
     select = 1
     mainmenu()
-    display.text(">",0,60,65535)
+    display.text(">",0+offsetX,60,65535)
     display.commit()
   elif menu == 4:
     menu = 1
     select = 3
     mainmenu()
-    display.text(">",0,60,65535)
+    display.text(">",0+offsetX,60,65535)
     display.commit()
   elif menu == 5:
     menu = 1
     select = 2
     mainmenu()
-    display.text(">",0,60,65535)
+    display.text(">",0+offsetX,60,65535)
     display.commit()
   elif menu >= 6 and menu < 8:
     menu = 5
     select = 0
     mainmenu2()
-    display.text(">",0,60,65535)
+    display.text(">",0+offsetX,60,65535)
     display.commit()
   elif menu == 3:
     menu = 0
@@ -1108,6 +1149,12 @@ def bButton():
     select += 1
     if tone: piezo.tone(200, 50)
     select = select % 8
+  elif menu == 11:
+    menu = 7
+    select = 0
+    networkMenu()
+    display.text(">", 0+offsetX, 60, 65535)
+    display.commit()
 buttons.on_press(Buttons.B, bButton)
 
 def rightButton():
@@ -1158,7 +1205,7 @@ print('Za Školu budućnosti, Stemi LAB')
 print('GitHub: https://github.com/MrUsername7/PublicStuff/tree/main/The%20Bit%20Superstars/Meteor%20Shooter')
 startup()
 mainmenu()
-display.text(str(">"),0,60,65535)
+display.text(str(">"),0+offsetX,60,65535)
 display.commit()
 while running:
   buttons.scan()
@@ -1171,12 +1218,15 @@ while running:
     elif temp == 2 and selectMeteor[2]:
       meteorCY += random.randint(fVA,fVB)/fVC
     if meteorAY >= 130:
+      mAH = 3
       meteorAY = -40
       shuffleMeteors()
     elif meteorBY >= 130:
+      mBH = 3
       meteorBY = -40
       shuffleMeteors()
     elif meteorCY >= 130:
+      mCH = 3
       meteorCY = -40
       shuffleMeteors()
     game()
