@@ -219,7 +219,7 @@ flicker = False
 cupsList = [0,0,0,0,1,1,1,2] #  0 su vanzemaljci, 1 su +1 život, a 2 su +2 života
 tone = True
 code = 5
-version = "1.3.0 'ALPHA' BUGTEST"
+version = "1.3.1 'BETA'"
 lives = 1
 livesTick = 1
 totalDistance = 0
@@ -231,147 +231,6 @@ pswd = None
 running = True
 networks = None
 offsetX = 0
-
-class LVK:
-    selectX = 0
-    selectY = 0
-    inputt = ''
-    shifted = False
-    keyboardLowercaseText = [
-      ["1","2","3","4","5","6","7","8","9","0","-","="],
-      ["q","w","e","r","t","y","u","i","o","p","[","]","#"],
-      ["a","s","d","f","g","h","j","k","l",";","\'"],
-      ["\\","z","x","c","v","b","n","m",",",".","/"]
-    ]
-    keyboardUppercaseText = [
-      ["!",'"',"£","$","%","^","&","*","(",")","_","+"],
-      ["Q","W","E","R","T","Y","U","I","O","P","{","}","~"],
-      ["A","S","D","F","G","H","J","K","L",":","@"],
-      ["|","Z","X","C","V","B","N","M","<",">","?"]
-    ]
-
-    #Colors
-    textSelectedClr = 0 #33808 #31
-    textBgClr = 16904
-    textClr = 65535
-
-    @classmethod
-    def drawKeyboard(cls):
-        display.fill(16)
-        for i in range(0,4):
-            for j in range(0,13):
-                try:
-                    _ = cls.keyboardLowercaseText[i][j]
-                    if cls.selectX == j and cls.selectY == i:
-                        display.rect(j*8+offsetX, i*8, 8, 8, cls.textSelectedClr, True)
-                    else:
-                        display.rect(j*8+offsetX, i*8, 8, 8, cls.textBgClr, True)
-                    if cls.shifted:
-                        display.text(cls.keyboardUppercaseText[i][j], j*8+offsetX, i*8, cls.textClr)
-                    else:
-                        display.text(cls.keyboardLowercaseText[i][j], j*8+offsetX, i*8, cls.textClr)
-                except IndexError:
-                    pass
-        if cls.selectX == 0 and cls.selectY == 4:
-            display.rect(0+offsetX, 32, 24, 8, cls.textSelectedClr, True)
-        else:
-            display.rect(0+offsetX, 32, 24, 8, cls.textBgClr, True)
-        display.text('ESC', 0+offsetX, 32, cls.textClr)
-        if cls.selectX == 0 and cls.selectY == 5:
-            display.rect(0+offsetX, 40, 40, 8, cls.textSelectedClr, True)
-        else:
-            display.rect(0+offsetX, 40, 40, 8, cls.textBgClr, True)
-        display.text('ENTER', 0+offsetX, 40, cls.textClr)
-        if cls.selectX == 1 and cls.selectY == 4:
-            display.rect(24+offsetX, 32, 40, 8, cls.textSelectedClr, True)
-        else:
-            display.rect(24+offsetX, 32, 40, 8, cls.textBgClr, True)
-        display.text('SPACE', 24+offsetX, 32, cls.textClr)
-        if len(cls.inputt) > 16:
-            display.text(cls.inputt[-16:], 0+offsetX, 120, cls.textClr)
-        else:
-            display.text(cls.inputt, 0+offsetX, 120, cls.textClr)
-        display.text("A: Select", 0+offsetX, 48, cls.textClr)
-        display.text("B: Backspace", 0+offsetX, 56, cls.textClr)
-        display.text("C: Shift Toggle", 0+offsetX, 64, cls.textClr)
-        if emulated: display.text(lang[3], 0+offsetX, 112, 65535)
-        display.commit()
-    @classmethod
-    def getMod(cls):
-        if cls.selectY == 0:
-            return 12
-        elif cls.selectY == 1:
-            return 13
-        elif cls.selectY == 2 or cls.selectY == 3:
-            return 11
-        elif cls.selectY == 4:
-            return 2
-        else:
-            return 1
-    @classmethod
-    def rightPress(cls):
-        cls.selectX = (cls.selectX+1)%cls.getMod()
-        cls.drawKeyboard()
-    @classmethod
-    def leftPress(cls):
-        cls.selectX = (cls.selectX-1)%cls.getMod()
-        cls.drawKeyboard()
-    @classmethod
-    def upPress(cls):
-        cls.selectY = (cls.selectY-1)%6
-        cls.selectX = max(0, min(cls.getMod()-1, cls.selectX))
-        cls.drawKeyboard()
-    @classmethod
-    def downPress(cls):
-        cls.selectY = (cls.selectY+1)%6
-        cls.selectX = max(0, min(cls.getMod()-1, cls.selectX))
-        cls.drawKeyboard()
-    @classmethod
-    def select(cls):
-        try:
-            if cls.shifted:
-                cls.inputt = str(cls.inputt)+cls.keyboardUppercaseText[cls.selectY][cls.selectX]
-            else:
-                cls.inputt = str(cls.inputt)+cls.keyboardLowercaseText[cls.selectY][cls.selectX]
-            cls.drawKeyboard()
-            display.commit()
-        except IndexError:
-            if cls.selectX == 1 and cls.selectY == 4:
-                cls.inputt = str(cls.inputt)+" "
-                cls.drawKeyboard()
-                display.commit()
-            else:
-                cls.end()
-    @classmethod
-    def init(cls):
-        global menu
-        cls.inputt = ""
-        cls.selectX, cls.selectY = 0,0
-        menu = 8
-        cls.drawKeyboard()
-    @classmethod
-    def end(cls):
-        global ssid, pswd, menu, select
-        if cls.selectY == 5:
-            if select == 0:
-                ssid = cls.inputt
-            elif select == 1:
-                pswd = cls.inputt
-        menu = 7
-        networkMenu()
-        scroll()
-        display.commit()
-        networkMenu()
-        scroll()
-        display.commit()
-    @classmethod
-    def shiftLock(cls):
-        cls.shifted = not cls.shifted
-        cls.drawKeyboard()
-    @classmethod
-    def backspace(cls):
-        cls.inputt = cls.inputt[:-1]
-        cls.drawKeyboard()
 
 def save():
   with open('data.txt', 'w') as f:
@@ -1238,3 +1097,144 @@ while running:
       display.commit()
       if menu == 3:
         help()
+
+class LVK:
+    selectX = 0
+    selectY = 0
+    inputt = ''
+    shifted = False
+    keyboardLowercaseText = [
+      ["1","2","3","4","5","6","7","8","9","0","-","="],
+      ["q","w","e","r","t","y","u","i","o","p","[","]","#"],
+      ["a","s","d","f","g","h","j","k","l",";","\'"],
+      ["\\","z","x","c","v","b","n","m",",",".","/"]
+    ]
+    keyboardUppercaseText = [
+      ["!",'"',"£","$","%","^","&","*","(",")","_","+"],
+      ["Q","W","E","R","T","Y","U","I","O","P","{","}","~"],
+      ["A","S","D","F","G","H","J","K","L",":","@"],
+      ["|","Z","X","C","V","B","N","M","<",">","?"]
+    ]
+
+    #Colors
+    textSelectedClr = 0 #33808 #31
+    textBgClr = 16904
+    textClr = 65535
+
+    @classmethod
+    def drawKeyboard(cls):
+        display.fill(16)
+        for i in range(0,4):
+            for j in range(0,13):
+                try:
+                    _ = cls.keyboardLowercaseText[i][j]
+                    if cls.selectX == j and cls.selectY == i:
+                        display.rect(j*8+offsetX, i*8, 8, 8, cls.textSelectedClr, True)
+                    else:
+                        display.rect(j*8+offsetX, i*8, 8, 8, cls.textBgClr, True)
+                    if cls.shifted:
+                        display.text(cls.keyboardUppercaseText[i][j], j*8+offsetX, i*8, cls.textClr)
+                    else:
+                        display.text(cls.keyboardLowercaseText[i][j], j*8+offsetX, i*8, cls.textClr)
+                except IndexError:
+                    pass
+        if cls.selectX == 0 and cls.selectY == 4:
+            display.rect(0+offsetX, 32, 24, 8, cls.textSelectedClr, True)
+        else:
+            display.rect(0+offsetX, 32, 24, 8, cls.textBgClr, True)
+        display.text('ESC', 0+offsetX, 32, cls.textClr)
+        if cls.selectX == 0 and cls.selectY == 5:
+            display.rect(0+offsetX, 40, 40, 8, cls.textSelectedClr, True)
+        else:
+            display.rect(0+offsetX, 40, 40, 8, cls.textBgClr, True)
+        display.text('ENTER', 0+offsetX, 40, cls.textClr)
+        if cls.selectX == 1 and cls.selectY == 4:
+            display.rect(24+offsetX, 32, 40, 8, cls.textSelectedClr, True)
+        else:
+            display.rect(24+offsetX, 32, 40, 8, cls.textBgClr, True)
+        display.text('SPACE', 24+offsetX, 32, cls.textClr)
+        if len(cls.inputt) > 16:
+            display.text(cls.inputt[-16:], 0+offsetX, 120, cls.textClr)
+        else:
+            display.text(cls.inputt, 0+offsetX, 120, cls.textClr)
+        display.text("A: Select", 0+offsetX, 48, cls.textClr)
+        display.text("B: Backspace", 0+offsetX, 56, cls.textClr)
+        display.text("C: Shift Toggle", 0+offsetX, 64, cls.textClr)
+        if emulated: display.text(lang[3], 0+offsetX, 112, 65535)
+        display.commit()
+    @classmethod
+    def getMod(cls):
+        if cls.selectY == 0:
+            return 12
+        elif cls.selectY == 1:
+            return 13
+        elif cls.selectY == 2 or cls.selectY == 3:
+            return 11
+        elif cls.selectY == 4:
+            return 2
+        else:
+            return 1
+    @classmethod
+    def rightPress(cls):
+        cls.selectX = (cls.selectX+1)%cls.getMod()
+        cls.drawKeyboard()
+    @classmethod
+    def leftPress(cls):
+        cls.selectX = (cls.selectX-1)%cls.getMod()
+        cls.drawKeyboard()
+    @classmethod
+    def upPress(cls):
+        cls.selectY = (cls.selectY-1)%6
+        cls.selectX = max(0, min(cls.getMod()-1, cls.selectX))
+        cls.drawKeyboard()
+    @classmethod
+    def downPress(cls):
+        cls.selectY = (cls.selectY+1)%6
+        cls.selectX = max(0, min(cls.getMod()-1, cls.selectX))
+        cls.drawKeyboard()
+    @classmethod
+    def select(cls):
+        try:
+            if cls.shifted:
+                cls.inputt = str(cls.inputt)+cls.keyboardUppercaseText[cls.selectY][cls.selectX]
+            else:
+                cls.inputt = str(cls.inputt)+cls.keyboardLowercaseText[cls.selectY][cls.selectX]
+            cls.drawKeyboard()
+            display.commit()
+        except IndexError:
+            if cls.selectX == 1 and cls.selectY == 4:
+                cls.inputt = str(cls.inputt)+" "
+                cls.drawKeyboard()
+                display.commit()
+            else:
+                cls.end()
+    @classmethod
+    def init(cls):
+        global menu
+        cls.inputt = ""
+        cls.selectX, cls.selectY = 0,0
+        menu = 8
+        cls.drawKeyboard()
+    @classmethod
+    def end(cls):
+        global ssid, pswd, menu, select
+        if cls.selectY == 5:
+            if select == 0:
+                ssid = cls.inputt
+            elif select == 1:
+                pswd = cls.inputt
+        menu = 7
+        networkMenu()
+        scroll()
+        display.commit()
+        networkMenu()
+        scroll()
+        display.commit()
+    @classmethod
+    def shiftLock(cls):
+        cls.shifted = not cls.shifted
+        cls.drawKeyboard()
+    @classmethod
+    def backspace(cls):
+        cls.inputt = cls.inputt[:-1]
+        cls.drawKeyboard()
